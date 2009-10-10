@@ -7,8 +7,8 @@ src/bufmgr/BufferManager.d src/bufmgr/BufferManager.o:  \
   ../src/bufmgr/../diskmgr/../global/StatusCodes.h \
   ../src/bufmgr/../diskmgr/../global/ExternDefsOfGlobalConstants.h \
   ../src/bufmgr/../diskmgr/../global/GlobalStructures.h \
-  ../src/bufmgr/Frame.h ../src/bufmgr/../utils/debug.h \
-  ../src/bufmgr/../utils/util.h
+  ../src/bufmgr/../diskmgr/DiskFileAccessor.h ../src/bufmgr/Frame.h \
+  ../src/bufmgr/../utils/debug.h ../src/bufmgr/../utils/util.h
 
 ../src/bufmgr/BufferManager.h:
 
@@ -25,6 +25,8 @@ src/bufmgr/BufferManager.d src/bufmgr/BufferManager.o:  \
 ../src/bufmgr/../diskmgr/../global/ExternDefsOfGlobalConstants.h:
 
 ../src/bufmgr/../diskmgr/../global/GlobalStructures.h:
+
+../src/bufmgr/../diskmgr/DiskFileAccessor.h:
 
 ../src/bufmgr/Frame.h:
 

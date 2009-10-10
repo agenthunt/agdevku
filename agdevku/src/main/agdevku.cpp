@@ -12,7 +12,7 @@
 #include "../global/GlobalConstants.h"
 int main(void) {
 	BufferManager bufferManager;
-	bufferManager.initializeBuffer(1,4096);
+	bufferManager.initializeBuffer(1);
 	bufferManager.createDatabase("hello");
 	return 0;
 }

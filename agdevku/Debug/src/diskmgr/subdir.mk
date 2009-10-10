@@ -5,15 +5,18 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
 ../src/diskmgr/DiskManager.cpp \
-../src/diskmgr/FreePageManager.cpp 
+../src/diskmgr/FreePageManager.cpp \
+../src/diskmgr/SimpleDiskFileAccessor.cpp 
 
 OBJS += \
 ./src/diskmgr/DiskManager.o \
-./src/diskmgr/FreePageManager.o 
+./src/diskmgr/FreePageManager.o \
+./src/diskmgr/SimpleDiskFileAccessor.o 
 
 CPP_DEPS += \
 ./src/diskmgr/DiskManager.d \
-./src/diskmgr/FreePageManager.d 
+./src/diskmgr/FreePageManager.d \
+./src/diskmgr/SimpleDiskFileAccessor.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

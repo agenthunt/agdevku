@@ -12,5 +12,6 @@
 #define FAILURE	 false
 #define INVALID_PAGE  2
 #define PAGE_NOT_FOUND 3
+#define DISK_FILE_CLOSE_ERROR 4
 
 #endif /* STATUSCODES_H_ */

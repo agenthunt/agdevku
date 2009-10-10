@@ -15,3 +15,9 @@ DiskManager::DiskManager() {
 DiskManager::~DiskManager() {
 	// TODO Auto-generated destructor stub
 }
+
+STATUS_CODE DiskManager::createDatabase(const char *databaseName,
+		int numOfPages, int pageSize) {
+
+}
+
