@@ -4,16 +4,19 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
+../src/diskmgr/DBMainHeaderPage.cpp \
 ../src/diskmgr/DiskManager.cpp \
 ../src/diskmgr/FreePageManager.cpp \
 ../src/diskmgr/SimpleDiskFileAccessor.cpp 
 
 OBJS += \
+./src/diskmgr/DBMainHeaderPage.o \
 ./src/diskmgr/DiskManager.o \
 ./src/diskmgr/FreePageManager.o \
 ./src/diskmgr/SimpleDiskFileAccessor.o 
 
 CPP_DEPS += \
+./src/diskmgr/DBMainHeaderPage.d \
 ./src/diskmgr/DiskManager.d \
 ./src/diskmgr/FreePageManager.d \
 ./src/diskmgr/SimpleDiskFileAccessor.d 

@@ -15,12 +15,13 @@
  */
 class DiskFileAccessor{
 public:
+	virtual STATUS_CODE createDiskFile(const char *diskFileName,int numOfPages,int pageSize)=0;
 	virtual STATUS_CODE openDiskFile(const char *diskFileName) = 0;
 	virtual STATUS_CODE closeDiskFile() = 0;
-	virtual STATUS_CODE readPage(int pageNumber,char *pageData) = 0;
-	virtual STATUS_CODE writePage(int pageNumber, char *pageData) = 0;
-	virtual STATUS_CODE allocatePage(int& pageNumber) = 0;
-	virtual STATUS_CODE deallocatePage(int pageNumber) = 0;
+	virtual STATUS_CODE deleteDiskFile(const char *diskFileName) = 0;
+	virtual STATUS_CODE readPage(int pageNumber,int pageSize,char *pageData) = 0;
+	virtual STATUS_CODE writePage(int pageNumber,int pageSize,char *pageData) = 0;
+
 };
 
 #endif /* DISKFILEACCESSOR_H_ */

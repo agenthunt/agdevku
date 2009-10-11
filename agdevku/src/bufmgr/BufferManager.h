@@ -32,6 +32,10 @@ public:
 	STATUS_CODE createDatabase(const char *name, int numOfPages =
 			DEFAULT_NUM_OF_PAGES);
 	/**
+	 * delegates the call to the Diskmanager.
+	 */
+	STATUS_CODE dropDatabase(const char *name);
+	/**
 	 * delegates the call to the Diskmanager,
 	 * calls initializeBuffer with appropriate
 	 * if initializeBuffer has been called before then check if

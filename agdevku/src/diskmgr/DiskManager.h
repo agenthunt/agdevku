@@ -20,9 +20,15 @@ public:
 	 *  create a file and the initial structures like headerpage,systable,syscolumn etc
 	 * and writes to it.
 	 */
-	STATUS_CODE createDatabase(const char *databaseName,int numOfPages = DEFAULT_NUM_OF_PAGES,int pageSize = DEFAULT_PAGE_SIZE);
-	void closeDatabase();
+	STATUS_CODE createDatabase(const char *databaseName,int numOfPages,int pageSize );
+
+	/**
+	 * open the database, read the pagesize in the database and set it to pageSize_
+	 * and also pageSizeOfDatabase which will be used in the called function.
+	 */
 	STATUS_CODE openDatabase(const char *databaseName,int *pageSizeOfDatabase);
+	void closeDatabase();
+	STATUS_CODE dropDatabase(const char *databaseName);
 	STATUS_CODE readPage(int pageNumber,char *pageData);
 	STATUS_CODE writePage(int pageNumber, char *pageData);
 	STATUS_CODE allocatePage(int& pageNumber);

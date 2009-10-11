@@ -12,14 +12,15 @@ class SimpleDiskFileAccessor: public DiskFileAccessor {
 public:
 	SimpleDiskFileAccessor();
 	virtual ~SimpleDiskFileAccessor();
+	virtual STATUS_CODE createDiskFile(const char *diskFileName,int numOfPages,int pageSize);
 	virtual STATUS_CODE openDiskFile(const char *diskFileName);
 	virtual STATUS_CODE closeDiskFile();
-	virtual STATUS_CODE readPage(int pageNumber, char *pageData);
-	virtual STATUS_CODE writePage(int pageNumber, char *pageData);
-	virtual STATUS_CODE allocatePage(int& pageNumber);
-	virtual STATUS_CODE deallocatePage(int pageNumber);
+	virtual STATUS_CODE deleteDiskFile(const char *diskFileName);
+	virtual STATUS_CODE readPage(int pageNumber,int pageSize, char *pageData);
+	virtual STATUS_CODE writePage(int pageNumber,int pageSize, char *pageData);
 private :
 	int fd_;// file descriptor
+	int pageSize_;
 };
 
 #endif /* SIMPLEDISKFILEACCESSOR_H_ */

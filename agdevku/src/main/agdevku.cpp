@@ -10,9 +10,15 @@
 
 #include "../bufmgr/BufferManager.h"
 #include "../global/GlobalConstants.h"
+#include "../tests/TestSimpleDiskFileAccessor.cpp"
+#include <iostream>
+using namespace std;
 int main(void) {
-	BufferManager bufferManager;
-	bufferManager.initializeBuffer(1);
-	bufferManager.createDatabase("hello");
+//	BufferManager bufferManager;
+//	bufferManager.initializeBuffer(1);
+//	bufferManager.createDatabase("hello");
+	TestSimpleDiskFileAccessor testSimpleDiskFileAccessor;
+	int error = testSimpleDiskFileAccessor.basicTest();
+	cout<<error<<endl;
 	return 0;
 }

@@ -4,7 +4,6 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/heap/DBMainHeaderPage.cpp \
 ../src/heap/DataPage.cpp \
 ../src/heap/DirectoryEntry.cpp \
 ../src/heap/DirectoryHeaderPage.cpp \
@@ -12,7 +11,6 @@ CPP_SRCS += \
 ../src/heap/HeapFile.cpp 
 
 OBJS += \
-./src/heap/DBMainHeaderPage.o \
 ./src/heap/DataPage.o \
 ./src/heap/DirectoryEntry.o \
 ./src/heap/DirectoryHeaderPage.o \
@@ -20,7 +18,6 @@ OBJS += \
 ./src/heap/HeapFile.o 
 
 CPP_DEPS += \
-./src/heap/DBMainHeaderPage.d \
 ./src/heap/DataPage.d \
 ./src/heap/DirectoryEntry.d \
 ./src/heap/DirectoryHeaderPage.d \

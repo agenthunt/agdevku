@@ -7,7 +7,12 @@
 
 #ifndef EXTERNDEFSOFGLOBALCONSTANTS_H_
 #define EXTERNDEFSOFGLOBALCONSTANTS_H_
-extern const char *DATA_FOLDER;
+//all  #defines are here
+#define TRUE 1
+#define FALSE 0
+#define SYS_DEBUG TRUE
+
+extern const char *DATABASES_FOLDER;
 extern const int DEFAULT_PAGE_SIZE;
 extern const int DEFAULT_NUM_OF_PAGES;
 
