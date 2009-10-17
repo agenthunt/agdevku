@@ -11,6 +11,7 @@
 #include "../bufmgr/BufferManager.h"
 #include "../global/GlobalConstants.h"
 #include "../tests/TestSimpleDiskFileAccessor.cpp"
+#include "../tests/TestDiskManager.cpp"
 #include <iostream>
 using namespace std;
 int main(void) {
@@ -18,7 +19,10 @@ int main(void) {
 //	bufferManager.initializeBuffer(1);
 //	bufferManager.createDatabase("hello");
 	TestSimpleDiskFileAccessor testSimpleDiskFileAccessor;
-	int error = testSimpleDiskFileAccessor.basicTest();
-	cout<<error<<endl;
+	testSimpleDiskFileAccessor.basicTest();
+
+	TestDiskManager testDiskManager;
+	testDiskManager.createDatabaseTest();
+
 	return 0;
 }

@@ -7,8 +7,8 @@
 
 #ifndef STATUSCODES_H_
 #define STATUSCODES_H_
-
-
+#define TRUE true
+#define FALSE false
 #define SUCCESS  true
 #define FAILURE	 false
 #define INVALID_PAGE  2

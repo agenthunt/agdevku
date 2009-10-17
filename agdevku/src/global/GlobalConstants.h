@@ -12,11 +12,18 @@
 
 /*data here means where your database files
 created and stored */
-const char *DATABASES_FOLDER = "../databases/";
+const char *DATABASES_FOLDER = "src/databases/";
 
 const int DEFAULT_PAGE_SIZE = 8192;
 const int DEFAULT_NUM_OF_PAGES = 40;
 const int FREE_FRAME = -1;
+
+/**
+ * Just a note , first 128 bytes are reserved for storing header information
+ * about a page.If all are integer, then 128/4 = 32 int elements can be stored in
+ * the header
+ */
+const int DB_MAIN_HEADER_PAGE = 0;
 
 
 

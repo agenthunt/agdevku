@@ -32,7 +32,7 @@ public:
 			return error;
 		}
 		char *pageData = "hi how r u?";
-		error = diskFileAccessor->writePage(0, DEFAULT_PAGE_SIZE, pageData);
+		error = diskFileAccessor->writePage(1, DEFAULT_PAGE_SIZE, pageData);
 		if (SUCCESS != error) {
 			return error;
 		}
@@ -47,4 +47,6 @@ public:
 		cout << testName << ":" << methodName << "=SUCCESS" << endl;
 		return SUCCESS;
 	}
+
+
 };

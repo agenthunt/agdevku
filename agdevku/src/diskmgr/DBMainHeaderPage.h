@@ -7,13 +7,32 @@
 
 #ifndef DBMAINHEADERPAGE_H_
 #define DBMAINHEADERPAGE_H_
-
+#include "../global/ExternDefsOfGlobalConstants.h"
+#include "../global/StatusCodes.h"
+#include "../global/GlobalStructures.h"
 class DBMainHeaderPage {
 public:
 	DBMainHeaderPage(char *pageData);
 	virtual ~DBMainHeaderPage();
+	/**
+	 * This method is called to create the header page
+	 * first time when the database is created
+	 */
+	STATUS_CODE createHeaderPage(int pageSize);
+	int getSysTablePageNumber();
 private:
-
+	char *pageData_;
+	typedef struct DBMainHeaderStructure{
+		//default values fore creation of header page
+		int pageType;
+		int pageNumberOfFreePageList;
+		int pageSizeOfDatabase;
+		int sysTablePageNumber;
+		int sysColumnsPageNumber;
+		int numberOfTables;
+		int numberOfPages;
+	}DBMainheaderStruct;
+	DBMainheaderStruct headerStruct_;
 };
 
 #endif /* DBMAINHEADERPAGE_H_ */
