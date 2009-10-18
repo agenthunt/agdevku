@@ -12,6 +12,14 @@ class DirectoryEntry {
 public:
 	DirectoryEntry();
 	virtual ~DirectoryEntry();
+	int getSizeOfDirectoryEntry();
+private:
+	typedef struct DirectoryEntryStructure{
+		int entryNumber;
+		int pageNumber;
+		int freeSpace;
+	} DirectoryEntryStruct;
+	DirectoryEntryStruct directoryEntry_;
 };
 
 #endif /* DIRECTORYENTRY_H_ */

@@ -57,7 +57,8 @@ public:
 
 	/**
 	 * Call Diskmanager to allocate "howMany" number of pages and
-	 * if buffer free , add those pages into buffer,
+	 * if buffer free , just find empty frames for the added pages
+	 * no need to read anything from disk and store, because it is a new page
 	 * if buffer full, deallocate the pages and return error
 	 */
 	STATUS_CODE
@@ -80,6 +81,16 @@ public:
 	 * mark dirty
 	 */
 	STATUS_CODE writePage(int pageNumber, char *pageData);
+
+	/**
+	 * increment the pinCount of the frame corresponding to page
+	 */
+	void pinPage(int pageNumber);
+	/**
+	 *decrement the pinCount of the frame corresponding to page
+	 *also if dirty == true , mark frame as dirty
+	 */
+	void unPinPage(int pageNumber,bool dirty);
 
 	int getCurrentlyUsingPageSize();
 private:

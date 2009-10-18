@@ -11,6 +11,7 @@
 #include "SimpleDiskFileAccessor.h"
 #include "DBMainHeaderPage.h"
 #include "FreePageManager.h"
+#include "../heap/DirectoryHeaderPage.h"
 #include "../global/ExternDefsOfGlobalConstants.h"
 
 DiskManager::DiskManager() {
@@ -23,13 +24,18 @@ DiskManager::~DiskManager() {
 	delete diskFileAccessor;
 }
 
-STATUS_CODE DiskManager::createDatabase(const char *databaseName,
-		int numOfPages, int pageSize) {
-	char fullPathOfFile[64];
+void DiskManager::constructFullPathOfFile(char *fullPathOfFile,
+		const char *databaseName) {
 	strcpy(fullPathOfFile, DATABASES_FOLDER);
 	strcat(fullPathOfFile, "/");
 	strcat(fullPathOfFile, databaseName);
-	strcat(fullPathOfFile,".db");
+	strcat(fullPathOfFile, ".db");
+}
+
+STATUS_CODE DiskManager::createDatabase(const char *databaseName,
+		int numOfPages, int pageSize) {
+	char fullPathOfFile[64];
+	constructFullPathOfFile(fullPathOfFile, databaseName);
 	int error = diskFileAccessor->createDiskFile(fullPathOfFile, numOfPages,
 			pageSize);
 	if (SUCCESS != error) {
@@ -40,11 +46,11 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 		return error;
 	}
 	char dummy[pageSize];
-	memset(dummy,0,pageSize);
-	diskFileAccessor->writePage(numOfPages-1,pageSize,dummy);
+	memset(dummy, 0, pageSize);
+	diskFileAccessor->writePage(numOfPages - 1, pageSize, dummy);
 	char pageData[pageSize];
 	DBMainHeaderPage dbMainHeaderPage;
-	error = dbMainHeaderPage.createHeaderPage(pageSize,pageData,0);
+	error = dbMainHeaderPage.createHeaderPage(pageSize, pageData, 0);
 	if (SUCCESS != error) {
 		return error;
 	}
@@ -56,14 +62,40 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 
 	/**
 	 * create a page for the FreePageManager and write those details onto disk
+	 *
 	 */
 	FreePageManager freePageManager;
-	error = freePageManager.createFreePageManagerPage(pageSize,pageData,1);
+	error = freePageManager.createFreePageManagerPage(pageSize, pageData, 1);
 	if (SUCCESS != error) {
 		return error;
 	}
 	// 1st page number is always the free page manager page
 	error = diskFileAccessor->writePage(1, pageSize, pageData);
+	if (SUCCESS != error) {
+		return error;
+	}
+	DirectoryHeaderPage sysTableHeaderPage;
+	error = sysTableHeaderPage.createDirectoryHeaderPage(pageSize, pageData, 2);
+	if (SUCCESS != error) {
+		return error;
+	}
+	// 2nd page number is always the sys table's header page
+	error = diskFileAccessor->writePage(2, pageSize, pageData);
+	if (SUCCESS != error) {
+		return error;
+	}
+	DirectoryHeaderPage sysColHeaderPage;
+	error = sysColHeaderPage.createDirectoryHeaderPage(pageSize, pageData, 3);
+	if (SUCCESS != error) {
+		return error;
+	}
+	// 3th page number is always the sys col's header page
+	error = diskFileAccessor->writePage(3, pageSize, pageData);
+	if (SUCCESS != error) {
+		return error;
+	}
+
+	error = diskFileAccessor->closeDiskFile();
 	if (SUCCESS != error) {
 		return error;
 	}
@@ -73,29 +105,61 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 
 STATUS_CODE DiskManager::openDatabase(const char *databaseName,
 		int *pageSizeOfDatabase) {
-
+	char fullPathOfFile[64];
+	constructFullPathOfFile(fullPathOfFile, databaseName);
+	int error = diskFileAccessor->openDiskFile(fullPathOfFile);
+	if (SUCCESS != error) {
+		return error;
+	}
+	return SUCCESS;
 }
 
-void DiskManager::closeDatabase() {
-
+STATUS_CODE DiskManager::closeDatabase() {
+	int error = diskFileAccessor->closeDiskFile();
+	if (SUCCESS != error) {
+		return error;
+	}
+	return SUCCESS;
 }
 
 STATUS_CODE DiskManager::dropDatabase(const char *databaseName) {
-
+	char fullPathOfFile[64];
+	constructFullPathOfFile(fullPathOfFile, databaseName);
+	int error = diskFileAccessor->deleteDiskFile(fullPathOfFile);
+	if (SUCCESS != error) {
+		return error;
+	}
+	return SUCCESS;
 }
 
 STATUS_CODE DiskManager::readPage(int pageNumber, char *pageData) {
-
+	int error = diskFileAccessor->readPage(pageNumber, pageSize_, pageData);
+	if (SUCCESS != error) {
+		return error;
+	}
+	return SUCCESS;
 }
 
 STATUS_CODE DiskManager::writePage(int pageNumber, char *pageData) {
-
+	int error = diskFileAccessor->writePage(pageNumber, pageSize_, pageData);
+	if (SUCCESS != error) {
+		return error;
+	}
+	return SUCCESS;
 }
 
 STATUS_CODE DiskManager::allocatePage(int& pageNumber) {
-
+	return allocatePages(pageNumber, 1);
 }
 
 STATUS_CODE DiskManager::deallocatePage(int pageNumber) {
+	return deallocatePages(pageNumber, 1);
+}
+
+STATUS_CODE DiskManager::allocatePages(int& firstPageNumber, int howMany) {
+
+}
+
+STATUS_CODE DiskManager::deallocatePages(int& firstPageNumber, int howMany) {
 
 }

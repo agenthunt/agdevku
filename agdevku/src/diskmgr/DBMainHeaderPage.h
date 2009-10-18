@@ -24,7 +24,7 @@ public:
 private:
 	char *pageData_;
 	typedef struct DBMainHeaderStructure{
-		//default values fore creation of header page
+
 		int pageNumber;
 		int pageType;
 		int pageNumberOfFreePageList;
@@ -34,7 +34,7 @@ private:
 		int numberOfTables;
 		int numberOfPages;
 	}DBMainheaderStruct;
-	DBMainheaderStruct headerStruct_;
+	DBMainheaderStruct dbMainHeader_;
 };
 
 #endif /* DBMAINHEADERPAGE_H_ */

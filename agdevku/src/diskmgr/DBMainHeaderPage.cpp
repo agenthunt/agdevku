@@ -22,18 +22,19 @@ DBMainHeaderPage::~DBMainHeaderPage() {
 
 STATUS_CODE DBMainHeaderPage::createHeaderPage(int pageSize,char *pageData,int pageNumber) {
 	memset(pageData, 0, pageSize);
-	headerStruct_.pageType = DB_MAIN_HEADER_PAGE;
-	headerStruct_.pageNumber = pageNumber;
-	headerStruct_.pageNumberOfFreePageList = 1;
-	headerStruct_.pageSizeOfDatabase = pageSize;
-	headerStruct_.sysTablePageNumber = 2;
-	headerStruct_.sysColumnsPageNumber = 3;
-	headerStruct_.numberOfTables = 0;
-	headerStruct_.numberOfPages = 1;
-	memcpy(pageData, &headerStruct_, sizeof(DBMainheaderStruct));
+	//default values for creation of header page
+	dbMainHeader_.pageType = DB_MAIN_HEADER_PAGE;
+	dbMainHeader_.pageNumber = pageNumber;
+	dbMainHeader_.pageNumberOfFreePageList = 1;
+	dbMainHeader_.pageSizeOfDatabase = pageSize;
+	dbMainHeader_.sysTablePageNumber = 2;
+	dbMainHeader_.sysColumnsPageNumber = 3;
+	dbMainHeader_.numberOfTables = 0;
+	dbMainHeader_.numberOfPages = 4;
+	memcpy(pageData, &dbMainHeader_, sizeof(DBMainheaderStruct));
 	return SUCCESS;
 }
 
 int DBMainHeaderPage::getSysTablePageNumber() {
-	return headerStruct_.sysTablePageNumber;
+	return dbMainHeader_.sysTablePageNumber;
 }

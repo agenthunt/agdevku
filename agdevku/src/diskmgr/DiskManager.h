@@ -15,6 +15,8 @@ class DiskManager {
 public:
 	DiskManager();
 	virtual ~DiskManager();
+
+
 	/**
 	 * add an extension ".db" and assign to databaseFileName
 	 *  create a file and the initial structures like headerpage,systable,syscolumn etc
@@ -27,17 +29,23 @@ public:
 	 * and also pageSizeOfDatabase which will be used in the called function.
 	 */
 	STATUS_CODE openDatabase(const char *databaseName,int *pageSizeOfDatabase);
-	void closeDatabase();
+	STATUS_CODE closeDatabase();
 	STATUS_CODE dropDatabase(const char *databaseName);
 	STATUS_CODE readPage(int pageNumber,char *pageData);
 	STATUS_CODE writePage(int pageNumber, char *pageData);
+	/*thinking whethere allocation is part of DiskManager
+	 * can be done in BufferManager only,since freeManager will
+	 * also be there, but leaving it here for time being.
+	 */
 	STATUS_CODE allocatePage(int& pageNumber);
 	STATUS_CODE deallocatePage(int pageNumber);
-
+	STATUS_CODE allocatePages(int& firstPageNumber,int howMany = 1);
+	STATUS_CODE deallocatePages(int& firstPageNumber,int howMany = 1);
+	//the below should have been private, adding here for testing purposes
+	void constructFullPathOfFile(char *fullPathOfFile,const char *databaseName);
 
 private:
 	DiskFileAccessor *diskFileAccessor;
-
 	int pageSize_;// using this different databases might have different pagesize
 	              //also for demo purpose
 	char *databaseFileName; //this will be with extension .db

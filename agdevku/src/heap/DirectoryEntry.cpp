@@ -15,3 +15,7 @@ DirectoryEntry::DirectoryEntry() {
 DirectoryEntry::~DirectoryEntry() {
 	// TODO Auto-generated destructor stub
 }
+
+int DirectoryEntry::getSizeOfDirectoryEntry(){
+	return sizeof(DirectoryEntryStruct);
+}

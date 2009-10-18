@@ -91,10 +91,11 @@ STATUS_CODE FreePageManager::createFreePageManagerPage(int pageSize,
 	freePageHeader_.nextPageNumber = INVALID_PAGE;
 	freePageHeader_.maxNumberOfPages = pageSize - (128 * 8);
 	freePageHeader_.headerOffset = 32;
-	/*initially only db main header page and free page are allocated
-	 * therefore the value 00000011 = 0x3 is stored
+	/*initially only db main header page, free page
+	 * systable header page and syscol header page are allocated
+	 * therefore the value 00001111 = 0xF is stored
 	 */
-	pageData[32] = 0x3;
+	pageData[32] = 0xF;
 	return SUCCESS;
 }
 

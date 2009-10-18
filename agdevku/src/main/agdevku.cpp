@@ -20,11 +20,11 @@ int main(void) {
 //	bufferManager.initializeBuffer(1);
 //	bufferManager.createDatabase("hello");
 
-//	TestSimpleDiskFileAccessor testSimpleDiskFileAccessor;
-//	testSimpleDiskFileAccessor.basicTest();
-//
-//	TestDiskManager testDiskManager;
-//	testDiskManager.createDatabaseTest();
+	TestSimpleDiskFileAccessor testSimpleDiskFileAccessor;
+	testSimpleDiskFileAccessor.basicTest();
+
+	TestDiskManager testDiskManager;
+	testDiskManager.basicTest();
 
 	TestFreePageManager testFreePageManager;
 	testFreePageManager.isFreePageTest();

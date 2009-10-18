@@ -12,6 +12,11 @@ class DirectoryPage {
 public:
 	DirectoryPage();
 	virtual ~DirectoryPage();
+private:
+	typedef struct DirectoryPageStructure{
+		int pageNumber;
+	} DirectoryPageStruct;
+	DirectoryPageStruct directoryPage_;
 };
 
 #endif /* DIRECTORYPAGE_H_ */

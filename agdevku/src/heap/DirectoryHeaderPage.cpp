@@ -7,7 +7,7 @@
 
 #include "DirectoryHeaderPage.h"
 #include <string.h>
-
+#include "DirectoryEntry.h"
 DirectoryHeaderPage::DirectoryHeaderPage() {
 	// TODO Auto-generated constructor stub
 	pageData_ = NULL;
@@ -27,7 +27,9 @@ STATUS_CODE DirectoryHeaderPage::createDirectoryHeaderPage(int pageSize, char *p
 	directoryHeaderPageStruct_.pageNumber = pageNumber;
 	directoryHeaderPageStruct_.numberOfRecords = 0;
 	directoryHeaderPageStruct_.numberOfDirectoryPages = 1;
-	directoryHeaderPageStruct_.directoryEntrySize = 4;//dummy change it
-	directoryHeaderPageStruct_.firstDirectoryPageNumber = 4;//dummy change it
+	DirectoryEntry directoryEntry;
+	directoryHeaderPageStruct_.directoryEntrySize = directoryEntry.getSizeOfDirectoryEntry();
+	directoryHeaderPageStruct_.firstDirectoryPageNumber = -1;//indicates has not been created yet.
 	directoryHeaderPageStruct_.maxNumberOfDirectoryEntries = (pageSize - 128 *8) / directoryHeaderPageStruct_.directoryEntrySize;
+	return SUCCESS;
 }

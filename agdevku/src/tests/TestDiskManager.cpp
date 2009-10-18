@@ -6,7 +6,7 @@
  */
 
 #include "../diskmgr/DiskManager.h"
-
+#include "../utils/debug.h"
 #include "../global/ExternDefsOfGlobalConstants.h"
 #include "../global/StatusCodes.h"
 #include <iostream>
@@ -23,9 +23,28 @@ public:
 	STATUS_CODE createDatabaseTest() {
 		string methodName = "createDatabaseTest";
 		DiskManager diskManager;
-		diskManager.createDatabase("first",20,DEFAULT_PAGE_SIZE);
-		cout << testName << ":" << methodName << "=SUCCESS" << endl;
+		int error = diskManager.createDatabase("first", 20, DEFAULT_PAGE_SIZE);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+		}
+		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 		return SUCCESS;
+	}
+
+	STATUS_CODE dropDatabaseTest() {
+		string methodName = "dropDatabaseTest";
+		DiskManager diskManager;
+		int error = diskManager.dropDatabase("first");
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+		}
+		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
+		return SUCCESS;
+	}
+
+	STATUS_CODE basicTest() {
+		createDatabaseTest();
+		dropDatabaseTest();
 	}
 
 };
