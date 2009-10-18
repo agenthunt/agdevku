@@ -43,8 +43,8 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 	memset(dummy,0,pageSize);
 	diskFileAccessor->writePage(numOfPages-1,pageSize,dummy);
 	char pageData[pageSize];
-	DBMainHeaderPage dbMainHeaderPage(pageData);
-	error = dbMainHeaderPage.createHeaderPage(pageSize);
+	DBMainHeaderPage dbMainHeaderPage;
+	error = dbMainHeaderPage.createHeaderPage(pageSize,pageData,0);
 	if (SUCCESS != error) {
 		return error;
 	}
@@ -57,8 +57,8 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 	/**
 	 * create a page for the FreePageManager and write those details onto disk
 	 */
-	FreePageManager freePageManager(pageData);
-	error = freePageManager.createFreePageManagerPage(pageSize);
+	FreePageManager freePageManager;
+	error = freePageManager.createFreePageManagerPage(pageSize,pageData,1);
 	if (SUCCESS != error) {
 		return error;
 	}

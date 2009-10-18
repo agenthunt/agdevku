@@ -12,18 +12,20 @@
 #include "../global/GlobalStructures.h"
 class DBMainHeaderPage {
 public:
+	DBMainHeaderPage();
 	DBMainHeaderPage(char *pageData);
 	virtual ~DBMainHeaderPage();
 	/**
 	 * This method is called to create the header page
 	 * first time when the database is created
 	 */
-	STATUS_CODE createHeaderPage(int pageSize);
+	STATUS_CODE createHeaderPage(int pageSize,char *pageData,int pageNumber);
 	int getSysTablePageNumber();
 private:
 	char *pageData_;
 	typedef struct DBMainHeaderStructure{
 		//default values fore creation of header page
+		int pageNumber;
 		int pageType;
 		int pageNumberOfFreePageList;
 		int pageSizeOfDatabase;

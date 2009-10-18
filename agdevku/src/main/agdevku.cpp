@@ -12,17 +12,23 @@
 #include "../global/GlobalConstants.h"
 #include "../tests/TestSimpleDiskFileAccessor.cpp"
 #include "../tests/TestDiskManager.cpp"
+#include "../tests/TestFreePageManager.cpp"
 #include <iostream>
 using namespace std;
 int main(void) {
 //	BufferManager bufferManager;
 //	bufferManager.initializeBuffer(1);
 //	bufferManager.createDatabase("hello");
-	TestSimpleDiskFileAccessor testSimpleDiskFileAccessor;
-	testSimpleDiskFileAccessor.basicTest();
 
-	TestDiskManager testDiskManager;
-	testDiskManager.createDatabaseTest();
+//	TestSimpleDiskFileAccessor testSimpleDiskFileAccessor;
+//	testSimpleDiskFileAccessor.basicTest();
+//
+//	TestDiskManager testDiskManager;
+//	testDiskManager.createDatabaseTest();
+
+	TestFreePageManager testFreePageManager;
+	testFreePageManager.isFreePageTest();
+	testFreePageManager.basicTest();
 
 	return 0;
 }

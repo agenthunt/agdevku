@@ -8,8 +8,8 @@
 #ifndef EXTERNDEFSOFGLOBALCONSTANTS_H_
 #define EXTERNDEFSOFGLOBALCONSTANTS_H_
 //all  #defines are here
-#define TRUE 1
-#define FALSE 0
+#define TRUE true
+#define FALSE false
 #define SYS_DEBUG TRUE
 
 extern const char *DATABASES_FOLDER;

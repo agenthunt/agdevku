@@ -37,6 +37,7 @@ public:
 
 private:
 	DiskFileAccessor *diskFileAccessor;
+
 	int pageSize_;// using this different databases might have different pagesize
 	              //also for demo purpose
 	char *databaseFileName; //this will be with extension .db
