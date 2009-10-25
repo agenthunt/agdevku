@@ -7,18 +7,21 @@ CPP_SRCS += \
 ../src/diskmgr/DBMainHeaderPage.cpp \
 ../src/diskmgr/DiskManager.cpp \
 ../src/diskmgr/FreePageManager.cpp \
+../src/diskmgr/LinkedListFreePageManager.cpp \
 ../src/diskmgr/SimpleDiskFileAccessor.cpp 
 
 OBJS += \
 ./src/diskmgr/DBMainHeaderPage.o \
 ./src/diskmgr/DiskManager.o \
 ./src/diskmgr/FreePageManager.o \
+./src/diskmgr/LinkedListFreePageManager.o \
 ./src/diskmgr/SimpleDiskFileAccessor.o 
 
 CPP_DEPS += \
 ./src/diskmgr/DBMainHeaderPage.d \
 ./src/diskmgr/DiskManager.d \
 ./src/diskmgr/FreePageManager.d \
+./src/diskmgr/LinkedListFreePageManager.d \
 ./src/diskmgr/SimpleDiskFileAccessor.d 
 
 

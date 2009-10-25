@@ -4,22 +4,22 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/bplustree/BPlusTreeIndex.cpp \
-../src/bplustree/BPlusTreeLeaf.cpp \
-../src/bplustree/IndexDataFile.cpp \
-../src/bplustree/IndexFile.cpp 
+../src/bplustree/BPlusTree.cpp \
+../src/bplustree/IndexHeaderPage.cpp \
+../src/bplustree/IndexNode.cpp \
+../src/bplustree/LeafNode.cpp 
 
 OBJS += \
-./src/bplustree/BPlusTreeIndex.o \
-./src/bplustree/BPlusTreeLeaf.o \
-./src/bplustree/IndexDataFile.o \
-./src/bplustree/IndexFile.o 
+./src/bplustree/BPlusTree.o \
+./src/bplustree/IndexHeaderPage.o \
+./src/bplustree/IndexNode.o \
+./src/bplustree/LeafNode.o 
 
 CPP_DEPS += \
-./src/bplustree/BPlusTreeIndex.d \
-./src/bplustree/BPlusTreeLeaf.d \
-./src/bplustree/IndexDataFile.d \
-./src/bplustree/IndexFile.d 
+./src/bplustree/BPlusTree.d \
+./src/bplustree/IndexHeaderPage.d \
+./src/bplustree/IndexNode.d \
+./src/bplustree/LeafNode.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

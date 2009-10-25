@@ -10,6 +10,7 @@
 #include "../global/ExternDefsOfGlobalConstants.h"
 #include "../global/StatusCodes.h"
 #include "../global/GlobalStructures.h"
+#include "DiskMgrRelatedStructures.h"
 class DBMainHeaderPage {
 public:
 	DBMainHeaderPage();
@@ -19,20 +20,26 @@ public:
 	 * This method is called to create the header page
 	 * first time when the database is created
 	 */
-	STATUS_CODE createHeaderPage(int pageSize,char *pageData,int pageNumber);
+	STATUS_CODE createHeaderPage(int pageSize,char *pageData,int pageNumber,int numOfPages);
 	int getSysTablePageNumber();
+	int getFreePagePointer();
+	void updateFreePagePointer(int pageNumber);
+	int getTotalNumberOfPages();
+	int getPageSizeOfDatabase();
 private:
 	char *pageData_;
 	typedef struct DBMainHeaderStructure{
-
-		int pageNumber;
+		GeneralPageHeaderStruct generalPageHeaderStruct;
 		int pageType;
-		int pageNumberOfFreePageList;
+		int totalNumberOfPages;
+		int freePagePointer;
 		int pageSizeOfDatabase;
 		int sysTablePageNumber;
 		int sysColumnsPageNumber;
+		int sysIndexPageNumber;
+		int sysIndexColumnsPageNumber;
 		int numberOfTables;
-		int numberOfPages;
+		int numberOfPagesUsed;
 	}DBMainheaderStruct;
 	DBMainheaderStruct dbMainHeader_;
 };

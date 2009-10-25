@@ -15,6 +15,7 @@ public:
 private:
 	typedef struct DirectoryPageStructure{
 		int pageNumber;
+
 	} DirectoryPageStruct;
 	DirectoryPageStruct directoryPage_;
 };

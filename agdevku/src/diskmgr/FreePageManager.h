@@ -46,8 +46,8 @@ private:
 		int totalNumberOfPages;//totalNumber of pages currently allocated
 		int maxNumberOfPages;
 		int nextPageNumber;
-		int dummy[30];
 		int headerOffset;
+		int dummy[26];
 	} FreePageHeaderStruct;
 
 	FreePageHeaderStruct freePageHeader_;

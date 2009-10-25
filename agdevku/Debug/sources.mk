@@ -26,6 +26,7 @@ SUBDIRS := \
 src/tests \
 src/main \
 src/heap \
+src/global \
 src/diskmgr \
 src/bufmgr \
 src/bplustree \

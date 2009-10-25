@@ -44,7 +44,7 @@ public:
 
 	STATUS_CODE basicTest() {
 		createDatabaseTest();
-		dropDatabaseTest();
+		//dropDatabaseTest();
 	}
 
 };

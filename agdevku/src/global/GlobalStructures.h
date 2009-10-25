@@ -8,7 +8,12 @@
 #ifndef GLOBALSTRUCTURES_H_
 #define GLOBALSTRUCTURES_H_
 
-typedef struct RIDStructure{
+typedef struct GeneralPageHeaderStructure {
+	int pageNumber;
+	int nextPageNumber;
+} GeneralPageHeaderStruct;
+
+typedef struct RIDStructure {
 	int pageNumber;
 	int slotNumber;
 } RID;

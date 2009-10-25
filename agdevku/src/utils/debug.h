@@ -14,7 +14,8 @@
 #define DEBUG(x)
 #else
 #define DEBUG(x) \
-       std::cout <<"File:"<< __FILE__ <<",Line:" <<__LINE__ <<",msg:"<< x << std::endl;
+       std::cout <<"File:"<< __FILE__ <<",Line:" <<__LINE__ <<",msg:"<< x << std::endl;\
+std::cout.flush();
 #endif
 
 #endif /* DEBUG_H_ */

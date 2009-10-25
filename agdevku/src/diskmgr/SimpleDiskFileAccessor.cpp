@@ -78,6 +78,9 @@ STATUS_CODE SimpleDiskFileAccessor::readPage(int pageNumber, int pageSize,
 	}
 	error = read(fd_, pageData, pageSize);
 	if (error < pageSize) {
+		if(SYS_DEBUG){
+			perror("read");
+		}
 		return DISK_PAGE_READ_ERROR;
 	}
 	return SUCCESS;
