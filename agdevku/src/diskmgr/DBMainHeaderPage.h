@@ -24,6 +24,7 @@ public:
 	int getSysTablePageNumber();
 	int getFreePagePointer();
 	void updateFreePagePointer(int pageNumber);
+	void updateTotalNumberOfPages(int totalNumberOfPages);
 	int getTotalNumberOfPages();
 	int getPageSizeOfDatabase();
 private:

@@ -14,6 +14,7 @@
 #include "../tests/TestFreePageManager.cpp"
 #include "../tests/TestBufferManager.cpp"
 #include "../tests/TestLinkedListFreePageManager.cpp"
+#include "../tests/TestLRUReplacementPolicy.cpp"
 #include <iostream>
 using namespace std;
 int main(void) {
@@ -32,10 +33,13 @@ int main(void) {
 	//	testFreePageManager.basicTest();
 
 		TestBufferManager testBufferManager;
-		testBufferManager.basicTest();
+		//testBufferManager.resizeDatabaseTest();
+		testBufferManager.freePageTest();
 
 //	TestLinkedListFreePageManager testLinkedListFreePageManager;
 //	testLinkedListFreePageManager.basicTest();
 
+//	TestLRUReplacementPolicy testLRUReplacementPolicy;
+//	testLRUReplacementPolicy.basicTest();
 	return 0;
 }

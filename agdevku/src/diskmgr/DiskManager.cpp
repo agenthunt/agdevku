@@ -14,7 +14,7 @@
 #include "../heap/DirectoryHeaderPage.h"
 #include "../global/ExternDefsOfGlobalConstants.h"
 #include "LinkedListFreePageManager.h"
-
+#include "../bufmgr/BufferManager.h"
 DiskManager::DiskManager() {
 	// TODO Auto-generated constructor stub
 	diskFileAccessor_ = new SimpleDiskFileAccessor();
@@ -203,6 +203,30 @@ STATUS_CODE DiskManager::writePage(int pageNumber, int pageSize, char *pageData)
 DiskFileAccessor* DiskManager::getDiskFileAccessor() {
 	diskFileAccessor_ = new SimpleDiskFileAccessor();
 }
+
+STATUS_CODE DiskManager::resizeDatabase(int numberOfPages,int pageSize){
+	BufferManager *bufferManager = BufferManager::getInstance();
+	char *headerPageData;
+	bufferManager->pinAndGetPage(0, headerPageData);
+	DBMainHeaderPage dbMainHeaderPage(headerPageData);
+	int totalNumberofPagesInDB = dbMainHeaderPage.getTotalNumberOfPages();
+	LinkedListFreePageManager freePageManager;
+	int error = freePageManager.createLinkedListOfFreePages(
+			totalNumberofPagesInDB, DEFAULT_NUM_OF_PAGES - 1, diskFileAccessor_,
+			pageSize);
+	if (SUCCESS != error) {
+		bufferManager->unPinPage(0, true);
+		return error;
+	}
+	dbMainHeaderPage.updateFreePagePointer(
+			dbMainHeaderPage.getTotalNumberOfPages());
+	dbMainHeaderPage.updateTotalNumberOfPages(totalNumberofPagesInDB
+			+ DEFAULT_NUM_OF_PAGES);
+	bufferManager->unPinPage(0, true);
+	return SUCCESS;
+}
+
+
 
 STATUS_CODE DiskManager::allocatePage(int& pageNumber) {
 	return allocatePages(pageNumber, 1);

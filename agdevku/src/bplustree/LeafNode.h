@@ -11,10 +11,18 @@
 #include "../global/GlobalStructures.h"
 
 class LeafNode {
+
+public:
+	LeafNode();
+	virtual ~LeafNode();
+	STATUS_CODE createLeafPage(int &pagenumber, char*pagedata);
+	STATUS_CODE insertIntoLeafPage(int pagenumber, char* key, int rid);
+	STATUS_CODE deleteFromLeafPage(int pagenumber, char* key);
+	STATUS_CODE redistributeLeafPage(int pagenumber);
+
 private:
-	int pagenumber;
-	char* pagedata;
-	typedef struct LeafNodePage{
+
+	typedef struct LeafNodePageStructure {
 		GeneralPageHeaderStruct generalPageHeaderStruct;
 		char** key;
 		int* data;
@@ -22,14 +30,9 @@ private:
 		struct LeafNodePage* rightpointer;
 		int level;
 		int noOfRecords;
-	};
-public:
-	LeafNode();
-	STATUS_CODE createLeafPage(int &pagenumber,char*pagedata);
-	STATUS_CODE insertIntoLeafPage(int pagenumber,char* key,int rid);
-	STATUS_CODE deleteFromLeafPage(int pagenumber,char* key);
-	STATUS_CODE redistributeLeafPage(int pagenumber);
-	virtual ~LeafNode();
+	} LeafNodePageStruct;
+	int pageNumber_;
+	char* pageData_;
 };
 
 #endif /* LEAFNODE_H_ */

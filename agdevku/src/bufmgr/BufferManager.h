@@ -15,8 +15,8 @@
 #include "../global/GlobalStructures.h"
 #include "../global/StatusCodes.h"
 #include "../diskmgr/DiskManager.h"
-
 #include "Frame.h"
+#include "ReplacementPolicy.h"
 class BufferManager {
 public:
 
@@ -28,7 +28,7 @@ public:
 	 * set the private variable pageSize_ = pageSize
 	 */
 	STATUS_CODE
-	initializeBuffer(int sizeInMB, int pageSize = DEFAULT_PAGE_SIZE);
+	initializeBuffer(double sizeInMB, int pageSize = DEFAULT_PAGE_SIZE);
 
 	/**
 	 * delegates the call to the Diskmanager.
@@ -54,7 +54,7 @@ public:
 	/**
 	 * flush a specific page to disk
 	 */
-	STATUS_CODE flushPageToDisk(int pageNumber);
+	STATUS_CODE flushPageToDisk(int pageNumber,char *pageData);
 	/**
 	 * flush all dirty pages to disk
 	 */
@@ -91,8 +91,14 @@ public:
 	 */
 	void unPinPage(int pageNumber, bool dirty);
 
+	STATUS_CODE resizeDatabase(int numOfPages=DEFAULT_NUM_OF_PAGES);
+
 	int getCurrentlyUsingPageSize();
 	static BufferManager* getInstance();
+
+	//facing friend issues, so placing here
+	Frame **bufferPool_;
+	int numOfFrames_;
 private:
 	BufferManager();
 	/**
@@ -114,16 +120,18 @@ private:
 
 
 	static BufferManager *bufferManagerInstance_;
-	Frame **bufferPool_;
+
 	int pageSize_;
-	int numOfFrames_;
+
 	std::map<int, int> frameLookupTable_;
 	DiskManager diskManager_;
 	LinkedListFreePageManager freePageManager_;
 	int bufferSize_;//in MB
 	bool isDatabaseOpen_ ;
-    int dummy;
 
+	ReplacementPolicy *replacementPolicy_;
+
+    friend class LRUReplacmentPolicy;
 };
 
 #endif /* BUFFERMANAGER_H_ */

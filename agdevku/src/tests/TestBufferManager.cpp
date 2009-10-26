@@ -12,6 +12,7 @@
 #include "../diskmgr/DBMainHeaderPage.h"
 #include <iostream>
 #include <string>
+#include <assert.h>
 using namespace std;
 class TestBufferManager {
 
@@ -90,6 +91,90 @@ public:
 			DEBUG(testName << ":" << methodName << "=FAILURE,error="<<error << endl);
 			return FAILURE;
 		}
+		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
+		return SUCCESS;
+	}
+
+	STATUS_CODE resizeDatabaseTest() {
+		string methodName = "resizeDatabaseTest";
+		BufferManager *bufferManager = BufferManager::getInstance();
+		int error = bufferManager->initializeBuffer(1, DEFAULT_PAGE_SIZE);
+		bufferManager->createDatabase("first", 2);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		bufferManager->openDatabase("first");
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		int newPageNumber;
+		char *pageData;
+		error = bufferManager->newPage(newPageNumber, pageData);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		DEBUG("newPageNumber="<<newPageNumber);
+		bufferManager->pinAndGetPage(0, pageData);
+		DBMainHeaderPage dbMainHeaderPage(pageData);
+		DEBUG("totalNumber of pages"<<dbMainHeaderPage.getTotalNumberOfPages());
+
+		error = bufferManager->newPage(newPageNumber, pageData);
+		DEBUG("newPageNumber="<<newPageNumber);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+
+		DEBUG("totalNumber of pages"<<dbMainHeaderPage.getTotalNumberOfPages());
+		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
+		return SUCCESS;
+	}
+
+	STATUS_CODE freePageTest() {
+		string methodName = "freePageTest";
+		BufferManager *bufferManager = BufferManager::getInstance();
+		int error = bufferManager->initializeBuffer(1, DEFAULT_PAGE_SIZE);
+		bufferManager->createDatabase("first", 10);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		bufferManager->openDatabase("first");
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		int newPageNumber;
+		char *pageData;
+		error = bufferManager->newPage(newPageNumber, pageData);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		DEBUG("newPageNumber="<<newPageNumber);
+
+		error = bufferManager->newPage(newPageNumber, pageData);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		DEBUG("newPageNumber="<<newPageNumber);
+
+		error = bufferManager->freePage(newPageNumber);
+
+
+		error = bufferManager->newPage(newPageNumber, pageData);
+		assert(newPageNumber==2);
+		DEBUG("newPageNumber="<<newPageNumber);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+
+
 		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 		return SUCCESS;
 	}

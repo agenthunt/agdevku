@@ -43,11 +43,13 @@ STATUS_CODE DBMainHeaderPage::createHeaderPage(int pageSize, char *pageData,
 }
 
 int DBMainHeaderPage::getSysTablePageNumber() {
+	memcpy(&dbMainHeader_,pageData_,sizeof(DBMainheaderStruct));
 	return dbMainHeader_.sysTablePageNumber;
 }
 
 
 int DBMainHeaderPage::getFreePagePointer(){
+	memcpy(&dbMainHeader_,pageData_,sizeof(DBMainheaderStruct));
 	return dbMainHeader_.freePagePointer;
 }
 
@@ -58,9 +60,16 @@ void DBMainHeaderPage::updateFreePagePointer(int pageNumber){
 
 
 int DBMainHeaderPage::getTotalNumberOfPages(){
+	memcpy(&dbMainHeader_,pageData_,sizeof(DBMainheaderStruct));
 	return dbMainHeader_.totalNumberOfPages;
 }
 
 int DBMainHeaderPage::getPageSizeOfDatabase(){
+	memcpy(&dbMainHeader_,pageData_,sizeof(DBMainheaderStruct));
 	return dbMainHeader_.pageSizeOfDatabase;
+}
+
+void DBMainHeaderPage::updateTotalNumberOfPages(int totalNumberOfPages){
+	dbMainHeader_.totalNumberOfPages = totalNumberOfPages;
+	memcpy(pageData_, &dbMainHeader_, sizeof(DBMainheaderStruct));
 }

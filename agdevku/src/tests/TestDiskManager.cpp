@@ -42,7 +42,9 @@ public:
 		return SUCCESS;
 	}
 
-	STATUS_CODE basicTest() {
+
+
+	void basicTest() {
 		createDatabaseTest();
 		//dropDatabaseTest();
 	}

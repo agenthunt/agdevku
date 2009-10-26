@@ -13,12 +13,15 @@
 #include "../utils/util.h"
 #include "../diskmgr/DBMainHeaderPage.h"
 #include "../global/GeneralPageHeaderAccessor.h"
-
+#include "LRUReplacementPolicy.h"
+#include "../diskmgr/LinkedListFreePageManager.h"
 BufferManager::BufferManager() {
 	// TODO Auto-generated constructor stub
 	initializeBuffer(1, DEFAULT_PAGE_SIZE);
 	isDatabaseOpen_ = false;
-	dummy = 10;
+	//either do it here or do it in some config class
+	delete replacementPolicy_;
+	replacementPolicy_ = new LRUReplacementPolicy();
 }
 
 BufferManager::~BufferManager() {
@@ -36,7 +39,7 @@ BufferManager* BufferManager::getInstance() {
 
 /* Initializing Buffer, Making a buffer pool and each element in it will be a Frame object of the size of pageSize*/
 
-STATUS_CODE BufferManager::initializeBuffer(int sizeInMB, int pageSize) {
+STATUS_CODE BufferManager::initializeBuffer(double sizeInMB, int pageSize) {
 	delete bufferPool_;
 	pageSize_ = pageSize;
 	bufferSize_ = sizeInMB;
@@ -52,6 +55,14 @@ STATUS_CODE BufferManager::initializeBuffer(int sizeInMB, int pageSize) {
 STATUS_CODE BufferManager::createDatabase(const char *name, int numOfPages) {
 	DEBUG(numOfPages);
 	int error = diskManager_.createDatabase(name, numOfPages, pageSize_);
+	if (error != SUCCESS) {
+		return error;
+	}
+	return SUCCESS;
+}
+
+STATUS_CODE BufferManager::resizeDatabase(int numOfPages) {
+	int error = diskManager_.resizeDatabase(numOfPages,pageSize_);
 	if (error != SUCCESS) {
 		return error;
 	}
@@ -118,6 +129,7 @@ STATUS_CODE BufferManager::pinAndGetPage(int pageNumber, char*& pageData) {
 		}
 	}
 
+	replacementPolicy_->increasePriority(frameNumber);
 	bufferPool_[frameNumber]->pinCount_++;
 	return SUCCESS;
 }
@@ -138,7 +150,6 @@ int BufferManager::getFrame(int pageNumber) {
 }
 
 void BufferManager::unPinPage(int pageNumber, bool dirty) {
-
 	int frameNumber = getFrame(pageNumber);
 	bufferPool_[frameNumber]->pinCount_--;
 	bufferPool_[frameNumber]->dirty_ = dirty;
@@ -155,10 +166,11 @@ int BufferManager::getFreeFrame() {
 
 	//if it comes here, it means all frames have been allocated
 	//kick off some page based on policy
-	//LRU
+	//LRU or MRU depending on the algorithm
+	int frameToBeReplaced = replacementPolicy_->getFrameTobeReplaced();
 
-
-	//return freeFrame;
+	replacementPolicy_->resetPriority(frameToBeReplaced);
+	return frameToBeReplaced;
 }
 
 STATUS_CODE BufferManager::openDatabase(const char *databaseName) {
@@ -174,19 +186,56 @@ STATUS_CODE BufferManager::openDatabase(const char *databaseName) {
 	DBMainHeaderPage dbMainHeaderPage(pageData);
 	int pageSize = dbMainHeaderPage.getPageSizeOfDatabase();
 	if (pageSize != pageSize_) {
-		delete bufferPool_;
 		initializeBuffer(bufferSize_, pageSize);
 	}
 	isDatabaseOpen_ = true;
+
+	//lets load some important pages
+	char *dummyPageData;
+	pinAndGetPage(0, dummyPageData);
+	unPinPage(0, false);
+
 	return SUCCESS;
 }
 
 STATUS_CODE BufferManager::closeDatabase() {
+	flushAllPagesToDisk();
 	int error = diskManager_.closeDatabase();
 	if (error != SUCCESS) {
 		return error;
 	}
 	isDatabaseOpen_ = false;
+	return SUCCESS;
+}
+
+STATUS_CODE BufferManager::flushAllPagesToDisk() {
+	int error = SUCCESS;
+	for (int i = 0; i < numOfFrames_; i++) {
+		if (bufferPool_[i]->dirty_ == true) {
+			error = flushPageToDisk(bufferPool_[i]->pageNumber_,
+					bufferPool_[i]->pageData_);
+			if (error != SUCCESS) {
+				return error;
+			}
+		}
+	}
+	return SUCCESS;
+}
+
+STATUS_CODE BufferManager::flushPageToDisk(int pageNumber, char *pageData) {
+	int error = diskManager_.writePage(pageNumber, pageSize_, pageData);
+	if (error != SUCCESS) {
+		return error;
+	}
+	return SUCCESS;
+}
+
+STATUS_CODE BufferManager::freePage(int pageNumber){
+	LinkedListFreePageManager linkedListFreePageManager;
+	int error = linkedListFreePageManager.freePage(pageNumber);
+	if(error != SUCCESS){
+		return error;
+	}
 	return SUCCESS;
 }
 

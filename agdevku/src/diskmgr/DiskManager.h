@@ -33,6 +33,8 @@ public:
 	STATUS_CODE dropDatabase(const char *databaseName);
 	STATUS_CODE readPage(int pageNumber,int pageSize, char *pageData);
 	STATUS_CODE writePage(int pageNumber,int pageSize, char *pageData);
+	STATUS_CODE resizeDatabase(int numberOfPages,int pageSize);
+
 	/*thinking whethere allocation is part of DiskManager
 	 * can be done in BufferManager only,since freeManager will
 	 * also be there, but leaving it here for time being.

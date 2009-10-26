@@ -18,7 +18,7 @@ public:
 	STATUS_CODE createLinkedListOfFreePages(int rootPageNumber,
 			int numberOfPages, DiskFileAccessor *diskFileAccessor,int pageSize);
 	STATUS_CODE getFreePageNumber(int& freePageNumber);
-
+	STATUS_CODE freePage(int pageNumber);
 };
 
 #endif /* LINKEDLISTFREEPAGEMANAGER_H_ */

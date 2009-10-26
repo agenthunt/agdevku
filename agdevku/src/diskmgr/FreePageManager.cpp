@@ -23,7 +23,7 @@ FreePageManager::~FreePageManager() {
 }
 
 int FreePageManager::getFreePageNumber() {
-	getContinuousFreePageNumbers(1);
+	return getContinuousFreePageNumbers(1);
 }
 
 int FreePageManager::getContinuousFreePageNumbers(int howMany) {
