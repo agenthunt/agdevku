@@ -122,9 +122,9 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 			diskFileAccessor_, pageSize);
 
 	char pageData[pageSize];
-	DBMainHeaderPage dbMainHeaderPage;
+
 	error
-			= dbMainHeaderPage.createHeaderPage(pageSize, pageData, 0,
+			= DBMainHeaderPage::createHeaderPage(pageSize, pageData, 0,
 					numOfPages);
 	if (SUCCESS != error) {
 		return error;
@@ -205,24 +205,19 @@ DiskFileAccessor* DiskManager::getDiskFileAccessor() {
 }
 
 STATUS_CODE DiskManager::resizeDatabase(int numberOfPages,int pageSize){
-	BufferManager *bufferManager = BufferManager::getInstance();
-	char *headerPageData;
-	bufferManager->pinAndGetPage(0, headerPageData);
-	DBMainHeaderPage dbMainHeaderPage(headerPageData);
+	DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 	int totalNumberofPagesInDB = dbMainHeaderPage.getTotalNumberOfPages();
 	LinkedListFreePageManager freePageManager;
 	int error = freePageManager.createLinkedListOfFreePages(
 			totalNumberofPagesInDB, DEFAULT_NUM_OF_PAGES - 1, diskFileAccessor_,
 			pageSize);
 	if (SUCCESS != error) {
-		bufferManager->unPinPage(0, true);
 		return error;
 	}
 	dbMainHeaderPage.updateFreePagePointer(
 			dbMainHeaderPage.getTotalNumberOfPages());
 	dbMainHeaderPage.updateTotalNumberOfPages(totalNumberofPagesInDB
 			+ DEFAULT_NUM_OF_PAGES);
-	bufferManager->unPinPage(0, true);
 	return SUCCESS;
 }
 

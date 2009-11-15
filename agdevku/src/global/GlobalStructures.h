@@ -15,8 +15,8 @@ typedef struct GeneralPageHeaderStructure {
 
 typedef struct RIDStructure {
 	int pageNumber;
-	int slotNumber;
-} RID;
+	short slotNumber;
+} RIDStruct;
 
 typedef int STATUS_CODE;
 

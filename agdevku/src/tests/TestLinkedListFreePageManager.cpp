@@ -30,24 +30,31 @@ public:
 			DEBUG(testName << ":" << methodName << "=FAILURE" <<error<< endl);
 			return error;
 		}
+		error = bufferManager->openDatabase("first");
 		LinkedListFreePageManager linkedListFreePageManager;
 		int freePageNumber;
 		error = linkedListFreePageManager.getFreePageNumber(freePageNumber);
-		if (freePageNumber != 1) {
+		if (freePageNumber != 5) {
 			DEBUG(testName << ":" << methodName << "=FAILURE ,freepageNumber" << freePageNumber<< endl);
 			return error;
 		}
 
 		error = linkedListFreePageManager.getFreePageNumber(freePageNumber);
-		if (freePageNumber != 2) {
+		if (freePageNumber != 6) {
 			DEBUG(testName << ":" << methodName << "=FAILURE ,freepageNumber" << freePageNumber<< endl);
 			return error;
 		}
 
+
+		error = linkedListFreePageManager.getFreePageNumber(freePageNumber);
+		if (freePageNumber != 7) {
+			DEBUG(testName << ":" << methodName << "=FAILURE ,freepageNumber" << freePageNumber<< endl);
+			return error;
+		}
+
+		bufferManager->closeDatabase();
 		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 		return SUCCESS;
 	}
-
-
 
 };

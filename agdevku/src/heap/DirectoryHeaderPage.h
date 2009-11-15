@@ -14,10 +14,19 @@ public:
 	DirectoryHeaderPage();
 	DirectoryHeaderPage(char *pageData);
 	virtual ~DirectoryHeaderPage();
-	STATUS_CODE createDirectoryHeaderPage(int pageSize,char *pageData,int pageNumber);
+	STATUS_CODE createDirectoryHeaderPage();
+	STATUS_CODE createFirstDirectoryPage();
+	int getFirstDirectoryPageNumber();
+	int getNumberOfRecords();
+	int getNumberOfDirectoryPages();
+	int getDirectoryEntrySize();
+	int getMaxNumberOfDirectoryEntries();
+	int getPageNumber();
+	void updateFirstDirectoryPageNumber(int pageNumber);
+	void updateNumOfRecords(int numOfRecords);
 private:
 	typedef struct DirectoryHeaderPageStructure{
-		int pageNumber;
+		GeneralPageHeaderStruct generalPageHeader;
 		int numberOfRecords;
 		int numberOfDirectoryPages;
 		int firstDirectoryPageNumber;

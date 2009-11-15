@@ -30,20 +30,34 @@ public:
 			DEBUG(testName << ":" << methodName << "=FAILURE" <<error<< endl);
 			return error;
 		}
-		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 
 		DiskManager diskManager;
 
 		diskManager.openDatabase("first");
-		char headerPageData[DEFAULT_PAGE_SIZE];
+		char *headerPageData = new char[DEFAULT_PAGE_SIZE];
 		error = diskManager.readPage(0, DEFAULT_PAGE_SIZE, headerPageData);
 		if (SUCCESS != error) {
 			DEBUG(testName << ":" << methodName << "=FAILURE" <<error<< endl);
 			return error;
 		}
-		DBMainHeaderPage dbMainHeaderPage(headerPageData);
+		DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 		DEBUG("freePagePoitner is "<<dbMainHeaderPage.getFreePagePointer()<<endl);
 
+		int sysTableHeaderPageNumber = dbMainHeaderPage.getSysTablePageNumber();
+		assert(sysTableHeaderPageNumber==1);
+		int sysColHeaderPageNumber =
+				dbMainHeaderPage.getSysColumnsHeaderPageNumber();
+		if (sysColHeaderPageNumber != 2) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" <<sysColHeaderPageNumber<< endl);
+			return FAILURE;
+		}
+		int sysIndexHeaderPageNumber =
+				dbMainHeaderPage.getSysIndexHeaderPageNumber();
+		assert(sysIndexHeaderPageNumber == 3);
+		int sysIndexColumnsHeaderPageNumber =
+				dbMainHeaderPage.getSysIndexColumnsHeaderPageNumber();
+		assert(sysIndexColumnsHeaderPageNumber == 4);
+		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 		return SUCCESS;
 	}
 
@@ -75,15 +89,27 @@ public:
 		int pageNumber;
 		char *pageData;
 		error = bufferManager->newPage(pageNumber, pageData);
-		if (pageNumber != 1) {
+		if (pageNumber != 5) {
 			DEBUG(testName << ":" << methodName << "=FAILURE,error="<<error << endl);
 			return FAILURE;
 		}
+
 		error = bufferManager->newPage(pageNumber, pageData);
-		if (pageNumber != 2) {
+		if (pageNumber != 6) {
 			DEBUG(testName << ":" << methodName << "=FAILURE,error="<<error << endl);
 			return FAILURE;
 		}
+
+		error = bufferManager->newPage(pageNumber, pageData);
+		if (pageNumber != 7) {
+			DEBUG(testName << ":" << methodName << "=FAILURE,error="<<error << endl);
+			return FAILURE;
+		}
+
+
+		DBMainHeaderPage mainHeaderPage(DB_MAIN_HEADER_PAGE);
+		int freePagePointer = mainHeaderPage.getFreePagePointer();
+		DEBUG("freepagepointer"<<freePagePointer<<","<<mainHeaderPage.getPageSizeOfDatabase());
 		DEBUG("closing database");
 		bufferManager->closeDatabase();
 		error = bufferManager->newPage(pageNumber, pageData);
@@ -91,6 +117,7 @@ public:
 			DEBUG(testName << ":" << methodName << "=FAILURE,error="<<error << endl);
 			return FAILURE;
 		}
+
 		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 		return SUCCESS;
 	}
@@ -118,7 +145,7 @@ public:
 		}
 		DEBUG("newPageNumber="<<newPageNumber);
 		bufferManager->pinAndGetPage(0, pageData);
-		DBMainHeaderPage dbMainHeaderPage(pageData);
+		DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 		DEBUG("totalNumber of pages"<<dbMainHeaderPage.getTotalNumberOfPages());
 
 		error = bufferManager->newPage(newPageNumber, pageData);
@@ -165,7 +192,6 @@ public:
 
 		error = bufferManager->freePage(newPageNumber);
 
-
 		error = bufferManager->newPage(newPageNumber, pageData);
 		assert(newPageNumber==2);
 		DEBUG("newPageNumber="<<newPageNumber);
@@ -173,7 +199,6 @@ public:
 			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
 			return FAILURE;
 		}
-
 
 		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
 		return SUCCESS;

@@ -48,23 +48,14 @@ STATUS_CODE LinkedListFreePageManager::createLinkedListOfFreePages(
 
 STATUS_CODE LinkedListFreePageManager::getFreePageNumber(int& freePageNumber) {
 	BufferManager *bufferManager = BufferManager::getInstance();
-	char *headerPageData;
-	// dbmainheader page number is always 0.
-
-	int error = bufferManager->pinAndGetPage(DB_MAIN_HEADER_PAGE,
-			headerPageData);
-	if (error != SUCCESS) {
-		bufferManager->unPinPage(DB_MAIN_HEADER_PAGE, false);
-		return error;
-	}
-	DBMainHeaderPage dbMainHeaderPage(headerPageData);
+	DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 	freePageNumber = dbMainHeaderPage.getFreePagePointer();
 	DEBUG("freepagePointer = "<<freePageNumber);
 	if (freePageNumber == -1) {//-1 indicates end of free page linked list
 		//do all the following from bufferManager
 		//extend pages by some percentage
 		//create linked list of chains
-		error = bufferManager->resizeDatabase(DEFAULT_NUM_OF_PAGES);
+		int error = bufferManager->resizeDatabase(DEFAULT_NUM_OF_PAGES);
 		if (error != SUCCESS) {
 			bufferManager->unPinPage(DB_MAIN_HEADER_PAGE, false);
 			return error;
@@ -84,30 +75,18 @@ STATUS_CODE LinkedListFreePageManager::getFreePageNumber(int& freePageNumber) {
 	bufferManager->unPinPage(freePageNumber, false);
 	int toVerifyfreePageNumber = dbMainHeaderPage.getFreePagePointer();
 	DEBUG("toVerifyfreepagePointer = "<<toVerifyfreePageNumber);
-	bufferManager->unPinPage(DB_MAIN_HEADER_PAGE, true);
-
 	return SUCCESS;
 }
 
 STATUS_CODE LinkedListFreePageManager::freePage(int pageNumber) {
 	BufferManager *bufferManager = BufferManager::getInstance();
-	char *headerPageData;
-	// dbmainheader page number is always 0.
-
-	int error = bufferManager->pinAndGetPage(DB_MAIN_HEADER_PAGE,
-			headerPageData);
-	if (error != SUCCESS) {
-		bufferManager->unPinPage(DB_MAIN_HEADER_PAGE, false);
-		return error;
-	}
-	DBMainHeaderPage dbMainHeaderPage(headerPageData);
+	DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 	int currentFreePageNumber = dbMainHeaderPage.getFreePagePointer();
 	char *pageToBeFreed;
 	bufferManager->pinAndGetPage(pageNumber,pageToBeFreed);
 	GeneralPageHeaderAccessor generalPageHeaderAccessor(pageToBeFreed);
 	generalPageHeaderAccessor.setNextPageNumber(currentFreePageNumber);
 	dbMainHeaderPage.updateFreePagePointer(pageNumber);
-	bufferManager->unPinPage(DB_MAIN_HEADER_PAGE,true);
 	bufferManager->unPinPage(pageNumber,false);
 	return SUCCESS;
 }

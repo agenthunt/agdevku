@@ -13,7 +13,9 @@ public:
 	DirectoryEntry();
 	virtual ~DirectoryEntry();
 	int getSizeOfDirectoryEntry();
-private:
+	unsigned getFreeSpace();
+	int getPageNumber();
+
 	typedef struct DirectoryEntryStructure{
 		int entryNumber;
 		int pageNumber;

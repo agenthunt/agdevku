@@ -8,6 +8,7 @@
 #ifndef HEAPFILE_H_
 #define HEAPFILE_H_
 #include "../global/GlobalStructures.h"
+#include "DirectoryHeaderPage.h"
 /**
  * All tables are stored in Heapfiles. Heap file is a logical file and
  * physically it is just a bunch of pages . We follow the directory chain
@@ -16,14 +17,17 @@
 class HeapFile {
 public:
 	HeapFile(const char *fileName);
+	HeapFile(int dirHeaderPageNumber);
 	virtual ~HeapFile();
 	//void createFile(const char *fileName);//does not make sense to have
 	//this method, constructor suffices the purpose
 	void deleteFile();
-	RID insertRecord(char *record,unsigned recordLen);
-	bool deleteRecord(const RID& rid);
-	bool updateRecord(const RID& rid,char *record,unsigned recordLen);
-	void getRecord(const RID& rid,char *record,unsigned& recordLen);
+	STATUS_CODE insertRecord(char *record,unsigned recordLen,RIDStruct& rid);
+	void deleteRecord(const RIDStruct& rid);
+	STATUS_CODE updateRecord(const RIDStruct rid,char *record,unsigned recordLen);
+	void getRecord(const RIDStruct& rid,char *record,unsigned& recordLen);
+private:
+	DirectoryHeaderPage *dirHeaderPage_;
 };
 
 #endif /* HEAPFILE_H_ */

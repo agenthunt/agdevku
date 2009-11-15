@@ -129,7 +129,7 @@ private:
 	int bufferSize_;//in MB
 	bool isDatabaseOpen_ ;
 
-	ReplacementPolicy *replacementPolicy_;
+	ReplacementPolicy *replacementPolicy_ ;
 
     friend class LRUReplacmentPolicy;
 };

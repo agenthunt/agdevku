@@ -15,6 +15,8 @@
 #include "../tests/TestBufferManager.cpp"
 #include "../tests/TestLinkedListFreePageManager.cpp"
 #include "../tests/TestLRUReplacementPolicy.cpp"
+#include "../global/GlobalStructures.h"
+#include "../tests/TestHeapFile.cpp"
 #include <iostream>
 using namespace std;
 int main(void) {
@@ -32,14 +34,23 @@ int main(void) {
 	//	testFreePageManager.isFreePageTest();
 	//	testFreePageManager.basicTest();
 
-		TestBufferManager testBufferManager;
+//		TestBufferManager testBufferManager;
+//		testBufferManager.newPageTest();
 		//testBufferManager.resizeDatabaseTest();
-		testBufferManager.freePageTest();
+		//testBufferManager.freePageTest();
+		//testBufferManager.createDatabaseTest();
+
 
 //	TestLinkedListFreePageManager testLinkedListFreePageManager;
 //	testLinkedListFreePageManager.basicTest();
 
 //	TestLRUReplacementPolicy testLRUReplacementPolicy;
 //	testLRUReplacementPolicy.basicTest();
+
+//	cout<<sizeof(RIDStruct)<<endl;
+
+	TestHeapFile testHeapFile;
+	//testHeapFile.insertRecordTest();
+	testHeapFile.updateRecordTest();
 	return 0;
 }

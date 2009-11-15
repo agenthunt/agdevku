@@ -15,16 +15,27 @@ class DBMainHeaderPage {
 public:
 	DBMainHeaderPage();
 	DBMainHeaderPage(char *pageData);
+	DBMainHeaderPage(int pageNumber);
 	virtual ~DBMainHeaderPage();
 	/**
 	 * This method is called to create the header page
 	 * first time when the database is created
+	 * This is on disk that is why having this signature
+	 * for rest of other pages this should no arg method
 	 */
-	STATUS_CODE createHeaderPage(int pageSize,char *pageData,int pageNumber,int numOfPages);
+	static STATUS_CODE createHeaderPage(int pageSize,char *pageData,int pageNumber,int numOfPages);
 	int getSysTablePageNumber();
+	int getSysColumnsHeaderPageNumber();
+	int getSysIndexHeaderPageNumber();
+	int getSysIndexColumnsHeaderPageNumber();
 	int getFreePagePointer();
 	void updateFreePagePointer(int pageNumber);
 	void updateTotalNumberOfPages(int totalNumberOfPages);
+	void updateSysTableHeaderPageNumber(int sysTableHeaderPageNumber);
+	void updateSysColumnsHeaderPageNumber(int sysColumnsHeaderPageNumber);
+	void updateSysIndexHeaderPageNumber(int sysIndexHeaderPageNumber);
+	void updateSysIndexColumnsHeaderPageNumber(int sysIndexColumnsHeaderPageNumber);
+
 	int getTotalNumberOfPages();
 	int getPageSizeOfDatabase();
 private:
@@ -35,10 +46,10 @@ private:
 		int totalNumberOfPages;
 		int freePagePointer;
 		int pageSizeOfDatabase;
-		int sysTablePageNumber;
-		int sysColumnsPageNumber;
-		int sysIndexPageNumber;
-		int sysIndexColumnsPageNumber;
+		int sysTableHeaderPageNumber;
+		int sysColumnsHeaderPageNumber;
+		int sysIndexHeaderPageNumber;
+		int sysIndexColumnsHeaderPageNumber;
 		int numberOfTables;
 		int numberOfPagesUsed;
 	}DBMainheaderStruct;

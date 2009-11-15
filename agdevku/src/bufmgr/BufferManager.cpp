@@ -15,8 +15,11 @@
 #include "../global/GeneralPageHeaderAccessor.h"
 #include "LRUReplacementPolicy.h"
 #include "../diskmgr/LinkedListFreePageManager.h"
+#include "../heap/DirectoryHeaderPage.h"
+#include <cassert>
 BufferManager::BufferManager() {
 	// TODO Auto-generated constructor stub
+	bufferPool_ = NULL;
 	initializeBuffer(1, DEFAULT_PAGE_SIZE);
 	isDatabaseOpen_ = false;
 	//either do it here or do it in some config class
@@ -40,7 +43,10 @@ BufferManager* BufferManager::getInstance() {
 /* Initializing Buffer, Making a buffer pool and each element in it will be a Frame object of the size of pageSize*/
 
 STATUS_CODE BufferManager::initializeBuffer(double sizeInMB, int pageSize) {
-	delete bufferPool_;
+	if (bufferPool_ != NULL) {
+		delete[] bufferPool_;
+		bufferPool_ = NULL;
+	}
 	pageSize_ = pageSize;
 	bufferSize_ = sizeInMB;
 	numOfFrames_ = sizeInMB * 1024 * 1024 / pageSize;
@@ -58,11 +64,62 @@ STATUS_CODE BufferManager::createDatabase(const char *name, int numOfPages) {
 	if (error != SUCCESS) {
 		return error;
 	}
+	error = openDatabase(name);
+	if (error != SUCCESS) {
+		return error;
+	}
+
+	DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
+	/****start of creation of sys table headerpage*/
+
+	DirectoryHeaderPage sysTableDirectoryHeaderPage;
+	error = sysTableDirectoryHeaderPage.createDirectoryHeaderPage();
+	if (error != SUCCESS) {
+		return error;
+	}
+	dbMainHeaderPage.updateSysTableHeaderPageNumber(
+			sysTableDirectoryHeaderPage.getPageNumber());
+	/****end of creation of sys table headerpage*/
+
+	/****start of creation of sys columns headerpage*/
+	DirectoryHeaderPage sysColDirectoryHeaderPage;
+	error = sysColDirectoryHeaderPage.createDirectoryHeaderPage();
+	if (error != SUCCESS) {
+		return error;
+	}
+	dbMainHeaderPage.updateSysColumnsHeaderPageNumber(
+			sysColDirectoryHeaderPage.getPageNumber());
+	/****end of creation of sys columns headerpage*/
+
+	/****start of creation of sys index headerpage*/
+	DirectoryHeaderPage sysIndexDirectoryHeaderPage;
+	error = sysIndexDirectoryHeaderPage.createDirectoryHeaderPage();
+	if (error != SUCCESS) {
+		return error;
+	}
+	dbMainHeaderPage.updateSysIndexHeaderPageNumber(
+			sysIndexDirectoryHeaderPage.getPageNumber());
+	/****end of creation of sys index headerpage*/
+
+	/****start of creation of sys index columns headerpage*/
+	DirectoryHeaderPage sysIndexColDirectoryHeaderPage;
+	error = sysIndexColDirectoryHeaderPage.createDirectoryHeaderPage();
+	if (error != SUCCESS) {
+		return error;
+	}
+	dbMainHeaderPage.updateSysColumnsHeaderPageNumber(
+			sysIndexColDirectoryHeaderPage.getPageNumber());
+	/****end of creation of sys index headerpage*/
+
+	error = closeDatabase();
+	if (error != SUCCESS) {
+		return error;
+	}
 	return SUCCESS;
 }
 
 STATUS_CODE BufferManager::resizeDatabase(int numOfPages) {
-	int error = diskManager_.resizeDatabase(numOfPages,pageSize_);
+	int error = diskManager_.resizeDatabase(numOfPages, pageSize_);
 	if (error != SUCCESS) {
 		return error;
 	}
@@ -74,6 +131,7 @@ STATUS_CODE BufferManager::newPage(int& pageNumber, char*& pageData) {
 		return DATABASE_NOT_OPEN;
 	}
 	int error = freePageManager_.getFreePageNumber(pageNumber);
+	DEBUG("newPage="<<pageNumber);
 	if (error != SUCCESS) {
 		return error;
 	}
@@ -95,9 +153,9 @@ STATUS_CODE BufferManager::pinAndGetPage(int pageNumber, char*& pageData) {
 	int error = FAILURE;
 	int frameNumber = getFrame(pageNumber);
 	if (frameNumber != FRAME_NOT_FOUND) {
-		pageData = bufferPool_[frameNumber]->pageData_;
+		pageData = bufferPool_[frameNumber]->pageData_;//page exists in the pool,just return the pointer
 	} else {
-		frameNumber = getFreeFrame();
+		frameNumber = getFreeFrame();//find free frame
 		if (FRAME_NOT_FOUND == frameNumber) {
 			return BUFFER_FULL;
 		} else {
@@ -111,11 +169,12 @@ STATUS_CODE BufferManager::pinAndGetPage(int pageNumber, char*& pageData) {
 				if (error != SUCCESS) {
 					return error;
 				}
-
 			}
 
-			//if page number exists then erase
+			//remove the  kicked out page number from lookup table,
 			frameLookupTable_.erase(bufferPool_[frameNumber]->pageNumber_);
+
+			//read the required pagenumber into the free frame
 			error = diskManager_.readPage(pageNumber, pageSize_,
 					bufferPool_[frameNumber]->pageData_);
 			if (error != SUCCESS) {
@@ -124,13 +183,13 @@ STATUS_CODE BufferManager::pinAndGetPage(int pageNumber, char*& pageData) {
 
 			pageData = bufferPool_[frameNumber]->pageData_;
 			GeneralPageHeaderAccessor gp(pageData);
-			DEBUG("pageNumber"<<gp.getPageNumber());
+			DEBUG("pageNumber="<<gp.getPageNumber());
 			insertIntoLookupTable(pageNumber, frameNumber);
 		}
 	}
 
 	replacementPolicy_->increasePriority(frameNumber);
-	bufferPool_[frameNumber]->pinCount_++;
+	bufferPool_[frameNumber]->pinCount_++;//indicates somebody is using it
 	return SUCCESS;
 }
 
@@ -151,15 +210,18 @@ int BufferManager::getFrame(int pageNumber) {
 
 void BufferManager::unPinPage(int pageNumber, bool dirty) {
 	int frameNumber = getFrame(pageNumber);
-	bufferPool_[frameNumber]->pinCount_--;
-	bufferPool_[frameNumber]->dirty_ = dirty;
+	assert(bufferPool_[frameNumber]->pinCount_>0);
+	bufferPool_[frameNumber]->pinCount_--;//somebody released it
+	if (dirty == true && bufferPool_[frameNumber]->dirty_ == false) {
+		bufferPool_[frameNumber]->dirty_ = dirty;
+	}
 }
 
 int BufferManager::getFreeFrame() {
 	//implement the replacement algorithm
 	for (int i = 0; i < numOfFrames_; i++) {
 		if (bufferPool_[i]->pinCount_ == -1) {//-1 indicates free frame, frame not allocated
-			bufferPool_[i]->pinCount_++;
+			bufferPool_[i]->pinCount_++;//here it gets allocated so becomes 0
 			return i;
 		}
 	}
@@ -178,23 +240,24 @@ STATUS_CODE BufferManager::openDatabase(const char *databaseName) {
 	if (error != SUCCESS) {
 		return error;
 	}
-	char pageData[DEFAULT_PAGE_SIZE];
-	diskManager_.readPage(0, DEFAULT_PAGE_SIZE, pageData);
-	if (error != SUCCESS) {
-		return error;
-	}
-	DBMainHeaderPage dbMainHeaderPage(pageData);
+	isDatabaseOpen_ = true;
+	//	char *pageData = new char[DEFAULT_PAGE_SIZE];
+	//	diskManager_.readPage(0, DEFAULT_PAGE_SIZE, pageData);
+	//	if (error != SUCCESS) {
+	//		return error;
+	//	}
+	DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 	int pageSize = dbMainHeaderPage.getPageSizeOfDatabase();
 	if (pageSize != pageSize_) {
 		initializeBuffer(bufferSize_, pageSize);
 	}
-	isDatabaseOpen_ = true;
 
 	//lets load some important pages
 	char *dummyPageData;
 	pinAndGetPage(0, dummyPageData);
 	unPinPage(0, false);
 
+	//delete pageData;
 	return SUCCESS;
 }
 
@@ -230,12 +293,16 @@ STATUS_CODE BufferManager::flushPageToDisk(int pageNumber, char *pageData) {
 	return SUCCESS;
 }
 
-STATUS_CODE BufferManager::freePage(int pageNumber){
+STATUS_CODE BufferManager::freePage(int pageNumber) {
 	LinkedListFreePageManager linkedListFreePageManager;
 	int error = linkedListFreePageManager.freePage(pageNumber);
-	if(error != SUCCESS){
+	if (error != SUCCESS) {
 		return error;
 	}
 	return SUCCESS;
+}
+
+int BufferManager::getCurrentlyUsingPageSize() {
+	return pageSize_;
 }
 

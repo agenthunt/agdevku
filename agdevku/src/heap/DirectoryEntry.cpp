@@ -6,7 +6,7 @@
  */
 
 #include "DirectoryEntry.h"
-
+#include "string.h"
 DirectoryEntry::DirectoryEntry() {
 	// TODO Auto-generated constructor stub
 
@@ -18,4 +18,12 @@ DirectoryEntry::~DirectoryEntry() {
 
 int DirectoryEntry::getSizeOfDirectoryEntry(){
 	return sizeof(DirectoryEntryStruct);
+}
+
+unsigned DirectoryEntry::getFreeSpace(){
+	return directoryEntry_.freeSpace;
+}
+
+int DirectoryEntry::getPageNumber(){
+	return directoryEntry_.pageNumber;
 }
