@@ -8,21 +8,24 @@ CPP_SRCS += \
 ../src/heap/DirectoryEntry.cpp \
 ../src/heap/DirectoryHeaderPage.cpp \
 ../src/heap/DirectoryPage.cpp \
-../src/heap/HeapFile.cpp 
+../src/heap/HeapFile.cpp \
+../src/heap/Tuple.cpp 
 
 OBJS += \
 ./src/heap/DataPage.o \
 ./src/heap/DirectoryEntry.o \
 ./src/heap/DirectoryHeaderPage.o \
 ./src/heap/DirectoryPage.o \
-./src/heap/HeapFile.o 
+./src/heap/HeapFile.o \
+./src/heap/Tuple.o 
 
 CPP_DEPS += \
 ./src/heap/DataPage.d \
 ./src/heap/DirectoryEntry.d \
 ./src/heap/DirectoryHeaderPage.d \
 ./src/heap/DirectoryPage.d \
-./src/heap/HeapFile.d 
+./src/heap/HeapFile.d \
+./src/heap/Tuple.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

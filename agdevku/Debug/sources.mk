@@ -28,6 +28,7 @@ src/main \
 src/heap \
 src/global \
 src/diskmgr \
+src/catalog \
 src/bufmgr \
 src/bplustree \
 

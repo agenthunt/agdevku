@@ -14,6 +14,7 @@ RM := rm -rf
 -include src/heap/subdir.mk
 -include src/global/subdir.mk
 -include src/diskmgr/subdir.mk
+-include src/catalog/subdir.mk
 -include src/bufmgr/subdir.mk
 -include src/bplustree/subdir.mk
 -include objects.mk

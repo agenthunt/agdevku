@@ -24,6 +24,7 @@ public:
 	void updateRecord(const RIDStruct rid,char *record,unsigned recordLen);
 	unsigned getContFreeSpace();
 	unsigned getRecordLength(int slotNumber);
+	void getRecord(const RIDStruct &rid,char *record,unsigned& recordLen);
 private:
 	void updateSlotEntry(int slotNumber, SlotEntryStruct& slotEntry);
 	void getSlotEntry(int slotNumber, SlotEntryStruct& slotEntry);

@@ -26,6 +26,7 @@ public:
 	void deleteRecord(const RIDStruct& rid);
 	STATUS_CODE updateRecord(const RIDStruct rid,char *record,unsigned recordLen);
 	void getRecord(const RIDStruct& rid,char *record,unsigned& recordLen);
+	int getNextRecordNumber();//used in generating table IDs for sysTable....
 private:
 	DirectoryHeaderPage *dirHeaderPage_;
 };

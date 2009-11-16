@@ -142,3 +142,11 @@ void HeapFile::deleteFile() {
 	//find all indices call delete on that, it should free all those pages
 
 }
+
+int HeapFile::getNextRecordNumber(){
+	return dirHeaderPage_->getNumberOfDirectoryPages() + 1;
+}
+
+void HeapFile::getRecord(const RIDStruct& rid,char *record,unsigned& recordLen){
+
+}

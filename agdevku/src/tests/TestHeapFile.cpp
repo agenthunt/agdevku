@@ -74,6 +74,12 @@ public:
 		newRec = "whatishappeningdude?";
 		heapFile.updateRecord(rid,newRec,20);
 
+		HeapFile sysHeapFile(0);
+		const RIDStruct sysRID = {6,0};
+		char *sysRec;
+		unsigned sysLen;
+		sysHeapFile.getRecord(sysRID,sysRec,sysLen);
+		DEBUG("SYSREC"<<*sysRec);
 		if (SUCCESS != error) {
 			DEBUG(testName << ":" << methodName << "=FAILURE" <<"error code="<<error<< endl);
 		}

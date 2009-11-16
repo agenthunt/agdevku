@@ -16,6 +16,7 @@
 #include "LRUReplacementPolicy.h"
 #include "../diskmgr/LinkedListFreePageManager.h"
 #include "../heap/DirectoryHeaderPage.h"
+#include "../catalog/SysTableUtil.h"
 #include <cassert>
 BufferManager::BufferManager() {
 	// TODO Auto-generated constructor stub
@@ -111,6 +112,8 @@ STATUS_CODE BufferManager::createDatabase(const char *name, int numOfPages) {
 			sysIndexColDirectoryHeaderPage.getPageNumber());
 	/****end of creation of sys index headerpage*/
 
+	SysTableUtil sysTableUtil;
+	sysTableUtil.addInitialSysTableRecord();
 	error = closeDatabase();
 	if (error != SUCCESS) {
 		return error;
