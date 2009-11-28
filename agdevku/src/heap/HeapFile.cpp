@@ -12,22 +12,29 @@
 #include "../global/ExternDefsOfGlobalConstants.h"
 #include <string.h>
 #include "../utils/debug.h"
+#include "../catalog/CatalogUtil.h"
 HeapFile::HeapFile(const char *fileName) {
 	// TODO Auto-generated constructor stub
 	//find out header page number based on fileName given
-
+	CatalogUtil catalogUtil;
+	int dirHeaderPageNumber = catalogUtil.getHeaderPageNumber(fileName);
+	initHeapFile(dirHeaderPageNumber);
 }
 
 HeapFile::HeapFile(int dirHeaderPageNumber) {
-	BufferManager *bufMgr = BufferManager::getInstance();
-	char *pageData;
-	bufMgr->pinAndGetPage(dirHeaderPageNumber, pageData);
-	dirHeaderPage_ = new DirectoryHeaderPage(pageData);
-	bufMgr->unPinPage(dirHeaderPageNumber, false);
+	initHeapFile(dirHeaderPageNumber);
 }
 
 HeapFile::~HeapFile() {
 	// TODO Auto-generated destructor stub
+}
+
+void HeapFile::initHeapFile(int dirHeaderPageNumber){
+	BufferManager *bufMgr = BufferManager::getInstance();
+		char *pageData;
+		bufMgr->pinAndGetPage(dirHeaderPageNumber, pageData);
+		dirHeaderPage_ = new DirectoryHeaderPage(pageData);
+		bufMgr->unPinPage(dirHeaderPageNumber, false);
 }
 
 STATUS_CODE HeapFile::insertRecord(char *record, unsigned recordLen,
@@ -144,9 +151,14 @@ void HeapFile::deleteFile() {
 }
 
 int HeapFile::getNextRecordNumber(){
-	return dirHeaderPage_->getNumberOfDirectoryPages() + 1;
+	return dirHeaderPage_->getNumberOfRecords();
 }
 
+/**
+ * also handle fwd addresses here;
+ * also the Datapage may be destructed here,handle that also
+ */
 void HeapFile::getRecord(const RIDStruct& rid,char *record,unsigned& recordLen){
-
+	DataPage dataPage(rid.pageNumber);
+	dataPage.getRecord(rid,record,recordLen);
 }

@@ -23,5 +23,9 @@
 #define BUFFER_FULL 10
 #define DATABASE_NOT_OPEN 11
 
+#define SCAN_OVER 12
+#define TABLE_NOT_FOUND 13
+#define DATABASE_ALREADY_EXISTS 14
+
 
 #endif /* STATUSCODES_H_ */

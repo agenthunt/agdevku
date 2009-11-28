@@ -9,6 +9,7 @@ CPP_SRCS += \
 ../src/heap/DirectoryHeaderPage.cpp \
 ../src/heap/DirectoryPage.cpp \
 ../src/heap/HeapFile.cpp \
+../src/heap/TableScan.cpp \
 ../src/heap/Tuple.cpp 
 
 OBJS += \
@@ -17,6 +18,7 @@ OBJS += \
 ./src/heap/DirectoryHeaderPage.o \
 ./src/heap/DirectoryPage.o \
 ./src/heap/HeapFile.o \
+./src/heap/TableScan.o \
 ./src/heap/Tuple.o 
 
 CPP_DEPS += \
@@ -25,6 +27,7 @@ CPP_DEPS += \
 ./src/heap/DirectoryHeaderPage.d \
 ./src/heap/DirectoryPage.d \
 ./src/heap/HeapFile.d \
+./src/heap/TableScan.d \
 ./src/heap/Tuple.d 
 
 

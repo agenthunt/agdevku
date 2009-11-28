@@ -44,7 +44,7 @@ public:
 		DEBUG("freePagePoitner is "<<dbMainHeaderPage.getFreePagePointer()<<endl);
 
 		int sysTableHeaderPageNumber = dbMainHeaderPage.getSysTablePageNumber();
-		assert(sysTableHeaderPageNumber==1);
+		assert(sysTableHeaderPageNumber == 1);
 		int sysColHeaderPageNumber =
 				dbMainHeaderPage.getSysColumnsHeaderPageNumber();
 		if (sysColHeaderPageNumber != 2) {
@@ -105,7 +105,6 @@ public:
 			DEBUG(testName << ":" << methodName << "=FAILURE,error="<<error << endl);
 			return FAILURE;
 		}
-
 
 		DBMainHeaderPage mainHeaderPage(DB_MAIN_HEADER_PAGE);
 		int freePagePointer = mainHeaderPage.getFreePagePointer();
@@ -193,8 +192,37 @@ public:
 		error = bufferManager->freePage(newPageNumber);
 
 		error = bufferManager->newPage(newPageNumber, pageData);
-		assert(newPageNumber==2);
+		assert(newPageNumber == 2);
 		DEBUG("newPageNumber="<<newPageNumber);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+
+		DEBUG(testName << ":" << methodName << "=SUCCESS" << endl);
+		return SUCCESS;
+	}
+
+	STATUS_CODE readPageTest() {
+		string methodName = "readPageTest";
+		BufferManager *bufferManager = BufferManager::getInstance();
+		int error = bufferManager->initializeBuffer(1, DEFAULT_PAGE_SIZE);
+		bufferManager->createDatabase("read_test", 10);
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+		bufferManager->openDatabase("read_test");
+		if (SUCCESS != error) {
+			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
+			return FAILURE;
+		}
+
+		char *pageData;
+		error = bufferManager->pinAndGetPage(5, pageData);
+		bufferManager->unPinPage(5, false);
+		int frameNumber = bufferManager->getFrame(5);
+		assert(bufferManager->bufferPool_[frameNumber]->dirty_ == false);
 		if (SUCCESS != error) {
 			DEBUG(testName << ":" << methodName << "=FAILURE" << endl);
 			return FAILURE;

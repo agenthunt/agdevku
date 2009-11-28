@@ -35,6 +35,7 @@ public:
 	STATUS_CODE writePage(int pageNumber,int pageSize, char *pageData);
 	STATUS_CODE resizeDatabase(int numberOfPages,int pageSize);
 
+
 	/*thinking whethere allocation is part of DiskManager
 	 * can be done in BufferManager only,since freeManager will
 	 * also be there, but leaving it here for time being.
@@ -49,6 +50,9 @@ public:
 					const char *databaseName);
 
 private:
+	bool checkIfDatabaseExists(const char *databaseName);
+	void addEntryToMasterFile(const char *databaseName);
+	void deleteEntryFromMasterFile(const char *databaseName);
 	DiskFileAccessor *diskFileAccessor_;
 	DiskFileAccessor* getDiskFileAccessor();
 	//char *databaseFileName_; //this will be with extension .db

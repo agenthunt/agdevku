@@ -12,12 +12,17 @@
 class Schema {
 public:
 	Schema();
+	Schema(std::string strDescSchema);
 	virtual ~Schema();
 	int numOfColumns;
-	int recSize;
+	std::string tableName;
 	std::vector<std::string> columnNames;
-	std::vector<int> fieldLengths;
 	std::vector<int> fieldTypes;
+	std::vector<int> fieldLengths;
+    void prepareSchemaObj(std::string strDescSchema);
+
+
+
 };
 
 #endif /* SCHEMA_H_ */

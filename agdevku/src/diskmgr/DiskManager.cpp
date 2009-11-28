@@ -15,6 +15,14 @@
 #include "../global/ExternDefsOfGlobalConstants.h"
 #include "LinkedListFreePageManager.h"
 #include "../bufmgr/BufferManager.h"
+#include <fstream>
+#include <vector>
+#include <string>
+#include <sstream>
+#include "../utils/util.h"
+#include "../utils/debug.h"
+#include <stdio.h>
+
 DiskManager::DiskManager() {
 	// TODO Auto-generated constructor stub
 	diskFileAccessor_ = new SimpleDiskFileAccessor();
@@ -35,7 +43,7 @@ void DiskManager::constructFullPathOfFile(char *fullPathOfFile,
 
 /*STATUS_CODE DiskManager::createDatabase(const char *databaseName,
  int numOfPages, int pageSize) {
- char fullPathOfFile[64];
+ char fullPathOfFile[FILE_NAME_SIZE];
  constructFullPathOfFile(fullPathOfFile, databaseName);
  int error = diskFileAccessor_->createDiskFile(fullPathOfFile, numOfPages,
  pageSize);
@@ -105,7 +113,12 @@ void DiskManager::constructFullPathOfFile(char *fullPathOfFile,
 
 STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 		int numOfPages, int pageSize) {
-	char fullPathOfFile[64];
+	if (checkIfDatabaseExists(databaseName) == true) {
+		return DATABASE_ALREADY_EXISTS;
+	}
+	addEntryToMasterFile(databaseName);
+
+	char fullPathOfFile[FILE_NAME_SIZE];
 	constructFullPathOfFile(fullPathOfFile, databaseName);
 	int error = diskFileAccessor_->createDiskFile(fullPathOfFile, numOfPages,
 			pageSize);
@@ -123,9 +136,8 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 
 	char pageData[pageSize];
 
-	error
-			= DBMainHeaderPage::createHeaderPage(pageSize, pageData, 0,
-					numOfPages);
+	error = DBMainHeaderPage::createHeaderPage(pageSize, pageData, 0,
+			numOfPages);
 	if (SUCCESS != error) {
 		return error;
 	}
@@ -137,8 +149,8 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 	}
 
 	error = diskFileAccessor_->closeDiskFile();
-	delete diskFileAccessor_;
-	diskFileAccessor_ = NULL;
+//	delete diskFileAccessor_;
+//	diskFileAccessor_ = NULL;
 	if (SUCCESS != error) {
 		return error;
 	}
@@ -146,9 +158,9 @@ STATUS_CODE DiskManager::createDatabase(const char *databaseName,
 }
 
 STATUS_CODE DiskManager::openDatabase(const char *databaseName) {
-	char fullPathOfFile[64];
+	char fullPathOfFile[FILE_NAME_SIZE];
 	constructFullPathOfFile(fullPathOfFile, databaseName);
-	diskFileAccessor_ = getDiskFileAccessor();
+	//diskFileAccessor_ = getDiskFileAccessor();
 	int error = diskFileAccessor_->openDiskFile(fullPathOfFile);
 	if (SUCCESS != error) {
 		return error;
@@ -162,13 +174,14 @@ STATUS_CODE DiskManager::closeDatabase() {
 	if (SUCCESS != error) {
 		return error;
 	}
-	delete diskFileAccessor_;
-	diskFileAccessor_ = NULL;
+//	delete diskFileAccessor_;
+//	diskFileAccessor_ = NULL;
 	return SUCCESS;
 }
 
 STATUS_CODE DiskManager::dropDatabase(const char *databaseName) {
-	char fullPathOfFile[64];
+	deleteEntryFromMasterFile(databaseName);
+	char fullPathOfFile[FILE_NAME_SIZE];
 	constructFullPathOfFile(fullPathOfFile, databaseName);
 	int error = diskFileAccessor_->deleteDiskFile(fullPathOfFile);
 	if (SUCCESS != error) {
@@ -202,15 +215,16 @@ STATUS_CODE DiskManager::writePage(int pageNumber, int pageSize, char *pageData)
 
 DiskFileAccessor* DiskManager::getDiskFileAccessor() {
 	diskFileAccessor_ = new SimpleDiskFileAccessor();
+	return diskFileAccessor_;
 }
 
-STATUS_CODE DiskManager::resizeDatabase(int numberOfPages,int pageSize){
+STATUS_CODE DiskManager::resizeDatabase(int numberOfPages, int pageSize) {
 	DBMainHeaderPage dbMainHeaderPage(DB_MAIN_HEADER_PAGE);
 	int totalNumberofPagesInDB = dbMainHeaderPage.getTotalNumberOfPages();
 	LinkedListFreePageManager freePageManager;
 	int error = freePageManager.createLinkedListOfFreePages(
-			totalNumberofPagesInDB, DEFAULT_NUM_OF_PAGES - 1, diskFileAccessor_,
-			pageSize);
+			totalNumberofPagesInDB, DEFAULT_NUM_OF_PAGES - 1,
+			diskFileAccessor_, pageSize);
 	if (SUCCESS != error) {
 		return error;
 	}
@@ -221,7 +235,139 @@ STATUS_CODE DiskManager::resizeDatabase(int numberOfPages,int pageSize){
 	return SUCCESS;
 }
 
+bool DiskManager::checkIfDatabaseExists(const char *databaseName) {
+	//	bool result = false;
+	//	char fullPathOfFile[FILE_NAME_SIZE];
+	//	constructFullPathOfFile(fullPathOfFile, "master");
+	//	std::ifstream masterFile(fullPathOfFile, std::ios::in);
+	//	std::stringstream stringStream;
+	//	string line;
+	//	while (getline(masterFile, line)) {
+	//		stringStream << line;
+	//	}
+	//	std::string dbListString = stringStream.str();
+	//	std::vector<std::string> dbList = Util::split(dbListString, "#");
+	//	std::string toMatchString(databaseName);
+	//	for (unsigned i = 0; i < dbList.size(); i++) {
+	//		if (dbList.at(i) == toMatchString) {
+	//			result = true;
+	//			break;
+	//		}
+	//	}
+	//	masterFile.close();
+	//	return result;
 
+	bool result = false;
+	char fullPathOfFile[FILE_NAME_SIZE];
+	constructFullPathOfFile(fullPathOfFile, "master");
+	FILE *masterFile;
+	masterFile = fopen(fullPathOfFile, "r");
+	std::stringstream stringStream;
+	char ch;
+	ch = getc(masterFile);
+	stringStream << ch;
+	while (ch != EOF) {
+		ch = getc(masterFile);
+		//fscanf(masterFile, "%c", &ch);
+		stringStream << ch;
+	}
+	std::string dbListString = stringStream.str();
+	std::vector<std::string> dbList = Util::split(dbListString, "#");
+	std::string toMatchString(databaseName);
+	for (unsigned i = 0; i < dbList.size(); i++) {
+		DEBUG("x,y="<<dbList.at(i)<<","<<toMatchString);
+		if (dbList.at(i) == toMatchString) {
+			result = true;
+			break;
+		}
+	}
+	fclose(masterFile);
+	return result;
+
+}
+
+void DiskManager::addEntryToMasterFile(const char *databaseName) {
+	//	char fullPathOfFile[FILE_NAME_SIZE];
+	//	std::ofstream masterFile(fullPathOfFile, std::ios::app);
+	//	masterFile.write(databaseName, strlen(databaseName));
+	//	masterFile.write("#", strlen("#"));
+	//	masterFile.flush();
+	//	masterFile.close();
+	DEBUG("databaseNAme"<<databaseName)
+	char fullPathOfFile[FILE_NAME_SIZE];
+	constructFullPathOfFile(fullPathOfFile,"master");
+	FILE *masterFile;
+	masterFile = fopen(fullPathOfFile, "a");
+	fprintf(masterFile, "%s#", databaseName);
+	fflush(masterFile);
+	fclose(masterFile);
+}
+
+void DiskManager::deleteEntryFromMasterFile(const char *databaseName) {
+	//	char fullPathOfFile[FILE_NAME_SIZE];
+	//	ifstream masterFile(fullPathOfFile, std::ios::in);
+	//	std::stringstream stringStream;
+	//
+	//	while (masterFile.eof() == false) {
+	//		string line;
+	//		while (getline(masterFile, line)) {
+	//			stringStream << line;
+	//		}
+	//	}
+	//	std::string dbListString = stringStream.str();
+	//	std::vector<std::string> dbList = Util::split(dbListString, "#");
+	//	std::vector<std::string> newList;
+	//	std::string toMatchString(databaseName);
+	//	for (unsigned i = 0; i < dbList.size(); i++) {
+	//		if (dbList.at(i) != toMatchString) {
+	//			newList.push_back(dbList.at(i));
+	//		}
+	//	}
+	//	masterFile.close();
+	//
+	//	std::ofstream newMasterFile(fullPathOfFile, std::ios::out);
+	//	for (unsigned i = 0; i < newList.size(); i++) {
+	//		const char *dbStr = newList.at(i).c_str();
+	//		newMasterFile.write(dbStr, strlen(dbStr));
+	//		newMasterFile.write("#", strlen("#"));
+	//	}
+	//	newMasterFile.flush();
+	//	newMasterFile.close();
+
+	char fullPathOfFile[FILE_NAME_SIZE];
+	constructFullPathOfFile(fullPathOfFile,"master");
+	FILE *masterFile;
+	masterFile = fopen(fullPathOfFile, "r");
+	std::stringstream stringStream;
+	char ch;
+	ch = getc(masterFile);
+	stringStream << ch;
+	while (ch != EOF) {
+		ch = getc(masterFile);
+		//fscanf(masterFile, "%c", &ch);
+		stringStream << ch;
+	}
+
+	std::string dbListString = stringStream.str();
+	std::vector<std::string> dbList = Util::split(dbListString, "#");
+	std::vector<std::string> newList;
+	std::string toMatchString(databaseName);
+	for (unsigned i = 0; i < dbList.size(); i++) {
+		if (dbList.at(i) != toMatchString) {
+			newList.push_back(dbList.at(i));
+		}
+	}
+	fclose(masterFile);
+
+	FILE *newMasterFile;
+	newMasterFile = fopen(fullPathOfFile, "w");
+	for (unsigned i = 0; i < newList.size(); i++) {
+		const char *dbStr = newList.at(i).c_str();
+		fprintf(newMasterFile, "%s#", dbStr);
+	}
+	fflush(newMasterFile);
+	fclose(newMasterFile);
+}
 
 STATUS_CODE DiskManager::allocatePage(int& pageNumber) {
 	return allocatePages(pageNumber, 1);

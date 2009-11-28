@@ -13,6 +13,7 @@ RM := rm -rf
 -include src/main/subdir.mk
 -include src/heap/subdir.mk
 -include src/global/subdir.mk
+-include src/executor/subdir.mk
 -include src/diskmgr/subdir.mk
 -include src/catalog/subdir.mk
 -include src/bufmgr/subdir.mk

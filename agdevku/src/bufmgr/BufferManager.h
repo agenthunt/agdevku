@@ -99,7 +99,7 @@ public:
 	//facing friend issues, so placing here
 	Frame **bufferPool_;
 	int numOfFrames_;
-private:
+//private:
 	BufferManager();
 	/**
 	 * increment the pinCount of the frame corresponding to page
@@ -128,6 +128,7 @@ private:
 	LinkedListFreePageManager freePageManager_;
 	int bufferSize_;//in MB
 	bool isDatabaseOpen_ ;
+
 
 	ReplacementPolicy *replacementPolicy_ ;
 

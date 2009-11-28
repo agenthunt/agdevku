@@ -17,6 +17,8 @@
 #include "../tests/TestLRUReplacementPolicy.cpp"
 #include "../global/GlobalStructures.h"
 #include "../tests/TestHeapFile.cpp"
+#include "../tests/TestCatalogUtil.cpp"
+#include "../tests/TestMasterFile.cpp"
 #include <iostream>
 using namespace std;
 int main(void) {
@@ -34,23 +36,33 @@ int main(void) {
 	//	testFreePageManager.isFreePageTest();
 	//	testFreePageManager.basicTest();
 
-//		TestBufferManager testBufferManager;
-//		testBufferManager.newPageTest();
-		//testBufferManager.resizeDatabaseTest();
-		//testBufferManager.freePageTest();
-		//testBufferManager.createDatabaseTest();
+	//		TestBufferManager testBufferManager;
+	//		testBufferManager.newPageTest();
+	//testBufferManager.resizeDatabaseTest();
+	//testBufferManager.freePageTest();
+	//testBufferManager.createDatabaseTest();
 
 
-//	TestLinkedListFreePageManager testLinkedListFreePageManager;
-//	testLinkedListFreePageManager.basicTest();
+	//	TestLinkedListFreePageManager testLinkedListFreePageManager;
+	//	testLinkedListFreePageManager.basicTest();
 
-//	TestLRUReplacementPolicy testLRUReplacementPolicy;
-//	testLRUReplacementPolicy.basicTest();
+	//	TestLRUReplacementPolicy testLRUReplacementPolicy;
+	//	testLRUReplacementPolicy.basicTest();
 
-//	cout<<sizeof(RIDStruct)<<endl;
+	//	cout<<sizeof(RIDStruct)<<endl;
 
-	TestHeapFile testHeapFile;
-	//testHeapFile.insertRecordTest();
-	testHeapFile.updateRecordTest();
+	//	TestHeapFile testHeapFile;
+	//	testHeapFile.insertRecordTest();
+	//	testHeapFile.updateRecordTest();
+
+	//	TestCatalogUtil testCatalogUtil;
+	//	testCatalogUtil.addInitialRecordTest();
+	//	testCatalogUtil.getSchemaTest();
+	//	TestMasterFile testMasterFile;
+	//	testMasterFile.insertMasterFile();
+	//testMasterFile.deleteFromMasterFile();
+
+	TestBufferManager testBufMgr;
+	testBufMgr.readPageTest();
 	return 0;
 }

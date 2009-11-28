@@ -27,6 +27,7 @@ src/tests \
 src/main \
 src/heap \
 src/global \
+src/executor \
 src/diskmgr \
 src/catalog \
 src/bufmgr \

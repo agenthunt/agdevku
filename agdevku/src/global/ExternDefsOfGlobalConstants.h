@@ -17,5 +17,6 @@ extern const int DEFAULT_PAGE_SIZE;
 extern const int DEFAULT_NUM_OF_PAGES;
 extern const int DB_MAIN_HEADER_PAGE;
 extern const int RID_LEN;
+extern const int FILE_NAME_SIZE;
 
 #endif /* EXTERNDEFSOFGLOBALCONSTANTS_H_ */

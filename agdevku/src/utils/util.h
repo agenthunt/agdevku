@@ -49,5 +49,10 @@ public:
 		mystream<<var;
 		return mystream.str();
 	}
+
+	static string char_to_string(char *var){
+		string res(var);
+		return res;
+	}
 };
 #endif /* UTIL_H_ */

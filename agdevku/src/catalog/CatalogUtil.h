@@ -11,23 +11,22 @@
 #include "../diskmgr/DBMainHeaderPage.h"
 #include "../global/GlobalStructures.h"
 #include "../global/StatusCodes.h"
-
-class SysTableUtil {
+#include "Schema.h"
+class CatalogUtil {
 public:
-	SysTableUtil();
-	virtual ~SysTableUtil();
+	CatalogUtil();
+	virtual ~CatalogUtil();
 	STATUS_CODE addInitialSysTableRecord();
+	STATUS_CODE addInitialSysColTableRecord();
+	STATUS_CODE addInitialSysIndexTableRecord();
+	STATUS_CODE addInitialSysIndexColTableRecord();
 	void getNextTableID();
+	int getTableID(char *tableName);
+	STATUS_CODE getSchema(char *tableName,Schema& schema);
+	int getHeaderPageNumber(const char *tableName);
 private:
-	typedef struct SysTableInitialStructure {
-		int tableID;
-		char tableName[32];
-		int numOfColumns;
-		int rowSize;
-		int headerPageNumber;//directoryHeaderPagenumber
-	} SysTableInitialStruct;
-	SysTableInitialStruct sysTableInitialStruct_;
 	HeapFile *sysTableHeapFile_;
+	HeapFile *sysColHeapFile_;
 	DBMainHeaderPage *dbMainHeaderPage_;
 };
 

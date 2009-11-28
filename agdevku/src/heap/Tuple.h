@@ -12,15 +12,18 @@
 class Tuple {
 public:
 	Tuple();
-	Tuple(Schema& schema,std::string values[]);
+	Tuple(Schema& schema,std::vector<std::string> values);
+	Tuple(Schema& schema,char *record,unsigned recordLen);
 	virtual ~Tuple();
 	char* prepRecordForInsertion();
-	int getLength();
+	unsigned getLength();
+	void getField(int fieldNum,void *fieldData);
+	bool fieldMatch(int fieldNum,void *fieldData);
 private:
 	Schema schema_;
-	std::string *values_;
+	std::vector<std::string> values_;
 	char *record_;
-	int length_;
+	unsigned length_;
 };
 
 #endif /* TUPLE_H_ */

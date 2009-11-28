@@ -139,9 +139,14 @@ unsigned DataPage::getRecordLength(int slotNumber) {
 	return slotEntry.recordLength;
 }
 
+
 void DataPage::getRecord(const RIDStruct &rid,char *record, unsigned& recordLen) {
 	SlotEntryStruct slotEntry;
 	getSlotEntry(rid.slotNumber, slotEntry);
 	recordLen = slotEntry.recordLength;
 	record = &pageData_[slotEntry.recordOffset];
+}
+
+int DataPage::getNumOfSlots(){
+	return dataPageHeader_.numOfSlots;
 }

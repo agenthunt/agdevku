@@ -16,15 +16,19 @@
 #include "LRUReplacementPolicy.h"
 #include "../diskmgr/LinkedListFreePageManager.h"
 #include "../heap/DirectoryHeaderPage.h"
-#include "../catalog/SysTableUtil.h"
+#include "../catalog/CatalogUtil.h"
 #include <cassert>
+#include "../global/ExternDefOfGlobalVariables.h"
+#include "../global/GlobalVariables.h"
+#include <string.h>
 BufferManager::BufferManager() {
 	// TODO Auto-generated constructor stub
 	bufferPool_ = NULL;
 	initializeBuffer(1, DEFAULT_PAGE_SIZE);
 	isDatabaseOpen_ = false;
+	strcpy(currentlyOpenedDatabase, "DATABASE NOT OPEN");
 	//either do it here or do it in some config class
-	delete replacementPolicy_;
+	//delete replacementPolicy_;//if you uncomment QT crashes dude
 	replacementPolicy_ = new LRUReplacementPolicy();
 }
 
@@ -112,8 +116,8 @@ STATUS_CODE BufferManager::createDatabase(const char *name, int numOfPages) {
 			sysIndexColDirectoryHeaderPage.getPageNumber());
 	/****end of creation of sys index headerpage*/
 
-	SysTableUtil sysTableUtil;
-	sysTableUtil.addInitialSysTableRecord();
+	CatalogUtil catalogUtil;
+	catalogUtil.addInitialSysTableRecord();
 	error = closeDatabase();
 	if (error != SUCCESS) {
 		return error;
@@ -206,14 +210,15 @@ int BufferManager::getFrame(int pageNumber) {
 
 	std::map<int, int>::iterator iter = frameLookupTable_.find(pageNumber);
 	if (iter != frameLookupTable_.end()) {
-		return frameLookupTable_[iter->second];
+		//return frameLookupTable_[iter->second];
+		return iter->second;
 	}
 	return FRAME_NOT_FOUND;
 }
 
 void BufferManager::unPinPage(int pageNumber, bool dirty) {
 	int frameNumber = getFrame(pageNumber);
-	assert(bufferPool_[frameNumber]->pinCount_>0);
+	assert(bufferPool_[frameNumber]->pinCount_ > 0);
 	bufferPool_[frameNumber]->pinCount_--;//somebody released it
 	if (dirty == true && bufferPool_[frameNumber]->dirty_ == false) {
 		bufferPool_[frameNumber]->dirty_ = dirty;
@@ -244,6 +249,7 @@ STATUS_CODE BufferManager::openDatabase(const char *databaseName) {
 		return error;
 	}
 	isDatabaseOpen_ = true;
+	strcpy(currentlyOpenedDatabase, databaseName);
 	//	char *pageData = new char[DEFAULT_PAGE_SIZE];
 	//	diskManager_.readPage(0, DEFAULT_PAGE_SIZE, pageData);
 	//	if (error != SUCCESS) {
@@ -265,13 +271,17 @@ STATUS_CODE BufferManager::openDatabase(const char *databaseName) {
 }
 
 STATUS_CODE BufferManager::closeDatabase() {
-	flushAllPagesToDisk();
-	int error = diskManager_.closeDatabase();
-	if (error != SUCCESS) {
-		return error;
+	if (isDatabaseOpen_ == true) {
+		flushAllPagesToDisk();
+		int error = diskManager_.closeDatabase();
+		if (error != SUCCESS) {
+			return error;
+		}
+		isDatabaseOpen_ = false;
+		strcpy(currentlyOpenedDatabase, "DATABASE NOT OPEN");
+		return SUCCESS;
 	}
-	isDatabaseOpen_ = false;
-	return SUCCESS;
+	return DATABASE_NOT_OPEN;
 }
 
 STATUS_CODE BufferManager::flushAllPagesToDisk() {
@@ -307,5 +317,12 @@ STATUS_CODE BufferManager::freePage(int pageNumber) {
 
 int BufferManager::getCurrentlyUsingPageSize() {
 	return pageSize_;
+}
+
+/**
+ * delegates the call to the Diskmanager.
+ */
+STATUS_CODE BufferManager::dropDatabase(const char *name) {
+	return diskManager_.dropDatabase(name);
 }
 

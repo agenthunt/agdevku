@@ -79,7 +79,7 @@ public:
 		char *sysRec;
 		unsigned sysLen;
 		sysHeapFile.getRecord(sysRID,sysRec,sysLen);
-		DEBUG("SYSREC"<<*sysRec);
+		DEBUG("SYSREC"<<(int)(*sysRec));
 		if (SUCCESS != error) {
 			DEBUG(testName << ":" << methodName << "=FAILURE" <<"error code="<<error<< endl);
 		}

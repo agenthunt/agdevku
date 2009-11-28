@@ -9,16 +9,19 @@
 #define HEAPFILE_H_
 #include "../global/GlobalStructures.h"
 #include "DirectoryHeaderPage.h"
+class TableScan;
 /**
  * All tables are stored in Heapfiles. Heap file is a logical file and
  * physically it is just a bunch of pages . We follow the directory chain
  * model.
  */
+
 class HeapFile {
 public:
 	HeapFile(const char *fileName);
 	HeapFile(int dirHeaderPageNumber);
 	virtual ~HeapFile();
+
 	//void createFile(const char *fileName);//does not make sense to have
 	//this method, constructor suffices the purpose
 	void deleteFile();
@@ -29,6 +32,9 @@ public:
 	int getNextRecordNumber();//used in generating table IDs for sysTable....
 private:
 	DirectoryHeaderPage *dirHeaderPage_;
+	friend class TableScan;
+	void initHeapFile(int dirHeaderPageNumber);
+
 };
 
 #endif /* HEAPFILE_H_ */

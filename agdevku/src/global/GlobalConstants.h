@@ -13,10 +13,11 @@
 /*data here means where your database files
 created and stored */
 //const char *DATABASES_FOLDER = "src/databases/";
-const char *DATABASES_FOLDER = "/home/shailesh/workspace/agdevku/src/databases/";
+const char *DATABASES_FOLDER = "/home/shailesh/workspace/agdevku/src/databases";
 const int DEFAULT_PAGE_SIZE = 8192;
 const int DEFAULT_NUM_OF_PAGES = 40;
 const int FREE_FRAME = -1;
+const int FILE_NAME_SIZE = 256;
 
 /**
  * Just a note , first 128 bytes are reserved for storing header information
