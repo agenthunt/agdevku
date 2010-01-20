@@ -1,0 +1,15 @@
+#summary AgDevKu
+
+= Introduction =
+
+As a part of our Master's course Advanced Database Management Systems (ADBMS) , we are building a database engine from scratch. We have hosted here to keep track of our development.
+
+We are graduate students at the International Institute of Information Technology-Bangalore.
+
+Shailesh Kumar 
+Manish Agrawal
+Ravindra Devagiri
+
+If you wondering why is it named as agdevku, It is actually the first few letters of our last names.
+
+(Ag)rawal,(Dev)agiri,(Ku)mar Thatz AgDevKu :-) 
