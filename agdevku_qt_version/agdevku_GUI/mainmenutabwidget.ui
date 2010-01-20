@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainMenuWidgetTab</class>
+ <widget class="QTabWidget" name="MainMenuWidgetTab">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainMenuTabWidget</string>
+  </property>
+  <property name="currentIndex">
+   <number>1</number>
+  </property>
+  <widget class="QWidget" name="bufMgrTab">
+   <attribute name="title">
+    <string>BUFFER MANAGER</string>
+   </attribute>
+  </widget>
+  <widget class="QWidget" name="sqlTab">
+   <attribute name="title">
+    <string>SQL</string>
+   </attribute>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>

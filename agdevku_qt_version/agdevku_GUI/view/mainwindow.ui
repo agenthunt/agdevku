@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindowClass</class>
+ <widget class="QMainWindow" name="MainWindowClass">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuCommand">
+    <property name="title">
+     <string>Command</string>
+    </property>
+    <addaction name="actionCREATE_DATABASE"/>
+    <addaction name="actionOPEN_DATABASE"/>
+    <addaction name="actionInitialize_Buffer"/>
+    <addaction name="actionClose_Database"/>
+   </widget>
+   <widget class="QMenu" name="menuDiskViewer">
+    <property name="title">
+     <string>DiskViewer</string>
+    </property>
+    <addaction name="actionOpen_Disk_File"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionAbout_agdevku"/>
+   </widget>
+   <widget class="QMenu" name="menuConfig_Params">
+    <property name="title">
+     <string>ConfigParams</string>
+    </property>
+    <addaction name="actionIndex_On"/>
+    <addaction name="actionCommon_Debug_On"/>
+    <addaction name="actionHeap_Verbose_On"/>
+    <addaction name="actionBPlustree_Debug_On"/>
+   </widget>
+   <widget class="QMenu" name="menuTests">
+    <property name="title">
+     <string>Tests</string>
+    </property>
+    <addaction name="actionRun_Tests"/>
+   </widget>
+   <widget class="QMenu" name="menuMisc">
+    <property name="title">
+     <string>Misc</string>
+    </property>
+    <addaction name="actionHeap_Viewer"/>
+    <addaction name="actionUse_Client_Side_Sort"/>
+    <addaction name="actionUse_MMAP"/>
+   </widget>
+   <addaction name="menuCommand"/>
+   <addaction name="menuDiskViewer"/>
+   <addaction name="menuConfig_Params"/>
+   <addaction name="menuTests"/>
+   <addaction name="menuMisc"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionCREATE_DATABASE">
+   <property name="text">
+    <string>Create Database</string>
+   </property>
+  </action>
+  <action name="actionOPEN_DATABASE">
+   <property name="text">
+    <string>Open Database</string>
+   </property>
+  </action>
+  <action name="actionOpen_Disk_File">
+   <property name="text">
+    <string>Open Disk File</string>
+   </property>
+  </action>
+  <action name="actionAbout_agdevku">
+   <property name="text">
+    <string>About agdevku</string>
+   </property>
+  </action>
+  <action name="actionDelete_Database">
+   <property name="text">
+    <string>Delete Database</string>
+   </property>
+  </action>
+  <action name="actionIndex_On">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Turn On Index</string>
+   </property>
+  </action>
+  <action name="actionInitialize_Buffer">
+   <property name="text">
+    <string>Initialize Buffer</string>
+   </property>
+  </action>
+  <action name="actionClose_Database">
+   <property name="text">
+    <string>Close Database</string>
+   </property>
+  </action>
+  <action name="actionCommon_Debug_On">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Common Debug On</string>
+   </property>
+  </action>
+  <action name="actionHeap_Verbose_On">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Heap Verbose On</string>
+   </property>
+  </action>
+  <action name="actionRun_Tests">
+   <property name="text">
+    <string>Run Tests</string>
+   </property>
+  </action>
+  <action name="actionBPlustree_Debug_On">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>BPlustree Debug On</string>
+   </property>
+  </action>
+  <action name="actionHeap_Viewer">
+   <property name="text">
+    <string>Heap Viewer</string>
+   </property>
+  </action>
+  <action name="actionUse_Client_Side_Sort">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use Client Side Sort</string>
+   </property>
+  </action>
+  <action name="actionUse_MMAP">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Use MMAP</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
