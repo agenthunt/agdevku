@@ -1,2 +1,8 @@
 ==Screen Shot 1==
-[http://agdevku.webs.com/agdevku_shot_1.png]
+<a href="http://agdevku.webs.com/agdevku_shot_1.png"><img src="http://agdevku.webs.com/agdevku_shot_1.png" width="800" height="600"/></a>
+
+==Screen Shot 2==
+<a href="http://agdevku.webs.com/agdevku_shot_2.png"><img src="http://agdevku.webs.com/agdevku_shot_2.png" width="800" height="600"/></a>
+
+==Screen Shot 3==
+<a href="http://agdevku.webs.com/agdevku_shot_3.png"><img src="http://agdevku.webs.com/agdevku_shot_3.png" width="800" height="600"/></a>
