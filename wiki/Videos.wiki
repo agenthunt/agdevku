@@ -1,2 +1,7 @@
 = Videos =
 
+== Some queries in Action ==
+<wiki:video url="http://www.youtube.com/watch?v=h2usAseU4Ps"/>
+
+== The Buffer Manager ==
+<wiki:video url="http://www.youtube.com/watch?v=YYI4ym_z7lU"/>
